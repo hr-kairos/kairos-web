@@ -7,9 +7,10 @@ export default function Navbar() {
         <Link href="/" className="font-bold text-2xl">
           Kairos <span className="text-blue-500">Global</span>
         </Link>
-        <div className="space-x-6">
-          <Link href="/" className="hover:text-blue-400">Home</Link>
-          <Link href="/contact" className="hover:text-blue-400">Contact</Link>
+        <div className="space-x-6 font-medium text-sm md:text-base">
+          <Link href="/" className="hover:text-blue-400 transition">Home</Link>
+          <Link href="/services" className="hover:text-blue-400 transition">Services</Link>
+          <Link href="/contact" className="hover:text-blue-400 transition">Contact</Link>
         </div>
       </div>
     </nav>
