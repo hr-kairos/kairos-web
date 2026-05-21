@@ -1,55 +1,52 @@
-import '../styles/globals.css';
-import Navbar from '../components/Navbar';
-import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function App({ Component, pageProps, router }) {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(timer);
-  }, []);
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const navItems = ['Home', 'Services', 'Clients', 'Contact'];
 
   return (
-    <div className="app-viewport-container cyber-mesh-bg">
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <motion.div 
-            key="cyber-loader"
-            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 bg-slate-950 z-[100] flex flex-col items-center justify-center"
+    <nav className="bg-slate-950/60 backdrop-blur-md border-b border-slate-900/80 text-white p-4 sticky top-0 z-50 w-full">
+      <div className="max-w-6xl mx-auto flex justify-between items-center w-full">
+        <Link href="/" className="flex items-center gap-3">
+          <img src="/logo.png" alt="Kairos" className="h-9 w-9 object-contain bg-slate-900 p-1 rounded-lg border border-slate-800" />
+          <span className="font-extrabold text-xl tracking-wider uppercase">
+            Kairos <span className="text-cyan-400">Global</span>
+          </span>
+        </Link>
+
+        <div className="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
+          {navItems.map((item) => (
+            <Link key={item} href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="text-slate-400 hover:text-cyan-400 transition-colors">
+              {item}
+            </Link>
+          ))}
+        </div>
+
+        <button className="block md:hidden text-slate-400 hover:text-white" onClick={() => setIsOpen(!isOpen)}>
+          <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="md:hidden bg-slate-950 border-t border-slate-900 mt-4"
           >
-            <div className="relative flex items-center justify-center w-24 h-24 mb-4">
-              <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-xl animate-ping"></div>
-              <div className="w-12 h-12 border-2 border-t-cyan-400 border-r-emerald-400 border-slate-800 rounded-xl animate-spin"></div>
+            <div className="flex flex-col p-4 space-y-4">
+              {navItems.map((item) => (
+                 <Link key={item} href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} onClick={() => setIsOpen(false)} className="text-slate-300 hover:text-cyan-400 font-medium text-base">
+                   {item}
+                 </Link>
+              ))}
             </div>
-            <h1 className="text-xl font-black tracking-[0.4em] text-white">KAIROS</h1>
-            <div className="h-[1px] w-12 bg-gradient-to-r from-cyan-500 to-green-500 my-2"></div>
-            <p className="text-[10px] text-emerald-400 font-mono tracking-[0.2em] animate-pulse">ESTABLISHING SECURE CONNECTION...</p>
           </motion.div>
-        ) : (
-          <div className="w-full flex flex-col min-h-screen">
-            <Navbar />
-            <AnimatePresence mode="wait">
-              <motion.div 
-                key={router.route}
-                initial={{ opacity: 0, rotateX: 8, y: 15, transformOrigin: "top center" }}
-                animate={{ opacity: 1, rotateX: 0, y: 0 }}
-                exit={{ opacity: 0, rotateX: -8, y: -15 }}
-                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                className="w-full flex-grow flex flex-col"
-              >
-                <Component {...pageProps} />
-              </motion.div>
-            </AnimatePresence>
-            <footer className="border-t border-slate-900 bg-slate-950/40 text-center py-6 text-xs text-slate-600 tracking-wider">
-              &copy; 2026 Kairos Global Solutions Pvt Ltd. All Capital Infrastructure Reserved.
-            </footer>
-          </div>
         )}
       </AnimatePresence>
-    </div>
+    </nav>
   );
 }
