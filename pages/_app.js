@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import Navbar from '../components/Navbar'; // <-- This line fixes the crash!
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -38,9 +39,6 @@ export default function App({ Component, pageProps, router }) {
                 <Component {...pageProps} />
               </motion.div>
             </AnimatePresence>
-            <footer className="border-t border-slate-900 bg-slate-950/40 text-center py-6 text-xs text-slate-600 tracking-wider w-full mt-auto">
-              &copy; 2026 Kairos Global Solutions Pvt Ltd. All Rights Reserved.
-            </footer>
           </div>
         )}
       </AnimatePresence>
