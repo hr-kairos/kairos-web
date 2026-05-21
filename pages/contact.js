@@ -5,7 +5,7 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus('Transmitting Packet...');
+    setStatus('Transmitting Packet Data...');
     
     const formData = {
       name: e.target.name.value,
@@ -30,8 +30,8 @@ export default function Contact() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-16 px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[75vh] box-border">
-      <div>
+    <div className="w-full max-w-6xl mx-auto py-12 px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[75vh] box-border">
+      <div className="w-full">
         <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">
           Connect <span className="text-cyan-400">Securely</span>
         </h2>
@@ -53,7 +53,7 @@ export default function Contact() {
           <input type="text" name="position" placeholder="Position Looking For" required className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-400 text-sm" />
           <textarea name="address" rows="3" placeholder="Address" required className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-400 text-sm"></textarea>
           
-          <button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-green-500 text-slate-950 font-bold py-3.5 rounded-xl shadow-lg hover:scale-[1.01] transition-transform">
+          <button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-green-500 text-slate-950 font-bold py-3.5 rounded-xl shadow-lg hover:scale-[1.01] transition-transform text-sm">
             Submit Application
           </button>
           {status && <p className="text-center text-xs font-semibold text-cyan-400 mt-2 tracking-wide">{status}</p>}
