@@ -16,6 +16,7 @@ export default function Navbar() {
           </span>
         </Link>
 
+        {/* Desktop Layout links */}
         <div className="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
           {navItems.map((item) => (
             <Link key={item} href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="text-slate-400 hover:text-cyan-400 transition-colors">
@@ -24,6 +25,7 @@ export default function Navbar() {
           ))}
         </div>
 
+        {/* Mobile menu trigger */}
         <button className="block md:hidden text-slate-400 hover:text-white" onClick={() => setIsOpen(!isOpen)}>
           <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
         </button>
