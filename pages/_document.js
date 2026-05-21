@@ -5,7 +5,6 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        {/* This line makes your logo act as the favicon! */}
         <link rel="icon" href="/logo.png" />
       </Head>
       <body>
