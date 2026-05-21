@@ -16,13 +16,14 @@ export default function Clients() {
   const [activeTab, setActiveTab] = useState("All Enterprise Partners");
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-16 px-4 md:px-6">
+    <div className="w-full max-w-6xl mx-auto py-16 px-4 md:px-6 box-border">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-extrabold text-white tracking-tight mb-4">Ecosystem <span className="gradient-text">Alliances</span></h1>
-        <p className="text-slate-400 max-w-xl mx-auto text-sm md:text-base">Operational integration directories across global technology corridors.</p>
+        <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">Ecosystem <span className="gradient-text">Alliances</span></h1>
+        <p className="text-slate-400 max-w-xl mx-auto text-sm md:text-base">Operational validation catalogs across partner corporate nodes.</p>
       </div>
 
-      <div className="flex flex-wrap gap-2 justify-center mb-12 border-b border-slate-900 pb-6">
+      {/* Tab select dashboard bar */}
+      <div className="flex flex-wrap gap-2 justify-center mb-10 border-b border-slate-900/80 pb-6">
         {Object.keys(tabSchedules).map((tab) => (
           <button
             key={tab}
@@ -36,19 +37,20 @@ export default function Clients() {
         ))}
       </div>
 
-      <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      {/* Grid container layout panel */}
+      <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full">
         <AnimatePresence mode="popLayout">
           {tabSchedules[activeTab].map((client) => (
             <motion.div
               layout
               key={client}
-              initial={{ opacity: 0, scale: 0.9, rotateY: 15 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              exit={{ opacity: 0, scale: 0.9, rotateY: -15 }}
-              whileHover={{ translateZ: 20, rotateY: 5, rotateX: 5 }}
-              className="perspective-card-container bg-slate-900/30 border border-slate-900 p-6 rounded-xl flex flex-col items-center justify-center h-28 hover:border-cyan-500/20 transition-all duration-300"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="bg-slate-900/30 border border-slate-900/80 p-6 rounded-xl flex flex-col items-center justify-center h-28 hover:border-cyan-500/20 transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 border border-slate-800 flex items-center justify-center font-black text-sm text-cyan-400 tracking-wider mb-2">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 border border-slate-800 flex items-center justify-center font-black text-xs text-cyan-400 tracking-wider mb-2">
                 {client.substring(0, 2).toUpperCase()}
               </div>
               <span className="text-xs md:text-sm font-bold text-slate-300">{client}</span>
