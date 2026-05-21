@@ -7,46 +7,49 @@ export default function App({ Component, pageProps, router }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Futuristic loading screen timer
-    const timer = setTimeout(() => setLoading(false), 2000);
+    const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="h-screen w-screen bg-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }} 
-          animate={{ opacity: 1, scale: 1 }} 
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 text-center"
-        >
-          <div className="w-16 h-16 border-4 border-cyan-500 border-t-green-400 rounded-full animate-spin mx-auto mb-6"></div>
-          <h1 className="text-3xl font-bold tracking-widest uppercase text-white">Kairos <span className="text-cyan-400">Global</span></h1>
-          <p className="text-green-400 text-sm mt-2 tracking-[0.2em] animate-pulse">INITIALIZING SYSTEM...</p>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-slate-950 bg-grid">
-      <Navbar />
+    <div className="app-viewport-container cyber-mesh-bg">
       <AnimatePresence mode="wait">
-        <motion.main 
-          key={router.route}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.4 }}
-          className="flex-grow flex flex-col relative z-10"
-        >
-          <Component {...pageProps} />
-        </motion.main>
+        {loading ? (
+          <motion.div 
+            key="cyber-loader"
+            exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 bg-slate-950 z-[100] flex flex-col items-center justify-center"
+          >
+            <div className="relative flex items-center justify-center w-24 h-24 mb-4">
+              <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-xl animate-ping"></div>
+              <div className="w-12 h-12 border-2 border-t-cyan-400 border-r-emerald-400 border-slate-800 rounded-xl animate-spin"></div>
+            </div>
+            <h1 className="text-xl font-black tracking-[0.4em] text-white">KAIROS</h1>
+            <div className="h-[1px] w-12 bg-gradient-to-r from-cyan-500 to-green-500 my-2"></div>
+            <p className="text-[10px] text-emerald-400 font-mono tracking-[0.2em] animate-pulse">ESTABLISHING SECURE CONNECTION...</p>
+          </motion.div>
+        ) : (
+          <div className="w-full flex flex-col min-h-screen">
+            <Navbar />
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={router.route}
+                initial={{ opacity: 0, rotateX: 8, y: 15, transformOrigin: "top center" }}
+                animate={{ opacity: 1, rotateX: 0, y: 0 }}
+                exit={{ opacity: 0, rotateX: -8, y: -15 }}
+                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                className="w-full flex-grow flex flex-col"
+              >
+                <Component {...pageProps} />
+              </motion.div>
+            </AnimatePresence>
+            <footer className="border-t border-slate-900 bg-slate-950/40 text-center py-6 text-xs text-slate-600 tracking-wider">
+              &copy; 2026 Kairos Global Solutions Pvt Ltd. All Capital Infrastructure Reserved.
+            </footer>
+          </div>
+        )}
       </AnimatePresence>
-      <footer className="bg-slate-900/80 backdrop-blur-md text-white text-center py-6 mt-auto border-t border-slate-800 relative z-10">
-        <p className="text-sm text-gray-500">&copy; 2026 Kairos Global Solutions Pvt Ltd. All Rights Reserved.</p>
-      </footer>
     </div>
   );
 }
