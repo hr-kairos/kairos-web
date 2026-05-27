@@ -12,7 +12,8 @@ export default function Contact() {
       email: e.target.email.value,
       mobile: e.target.mobile.value,
       position: e.target.position.value,
-      location: e.target.location.value,
+      currentLocation: e.target.currentLocation.value,
+      preferredLocation: e.target.preferredLocation.value,
     };
 
     const response = await fetch('/api/send-email', {
@@ -51,7 +52,10 @@ export default function Contact() {
           <input type="email" name="email" placeholder="Email Address" required className="w-full bg-white/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-cyan-500 text-sm shadow-sm" />
           <input type="tel" name="mobile" placeholder="Mobile Number" required className="w-full bg-white/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-cyan-500 text-sm shadow-sm" />
           <input type="text" name="position" placeholder="Position Applying For" required className="w-full bg-white/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-cyan-500 text-sm shadow-sm" />
-          <input type="text" name="location" placeholder="Location" required className="w-full bg-white/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-cyan-500 text-sm shadow-sm" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input type="text" name="currentLocation" placeholder="Current Location" required className="w-full bg-white/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-cyan-500 text-sm shadow-sm" />
+            <input type="text" name="preferredLocation" placeholder="Preferred Location" required className="w-full bg-white/80 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-cyan-500 text-sm shadow-sm" />
+          </div>
           
           <button type="submit" className="w-full bg-cyan-600 text-white font-bold uppercase tracking-wider text-xs py-4 rounded-xl shadow-lg shadow-cyan-500/20 hover:bg-cyan-700 transition-colors mt-2">
             Submit Application
