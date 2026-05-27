@@ -1,31 +1,35 @@
 import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-  const { name, email, mobile, position, address } = req.body;
-
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS, 
-    },
-  });
+  const { name, email, mobile, position, location } = req.body;
 
   try {
-    await transporter.sendMail({
+    // Switched to 'service: gmail' for reliable Vercel deployment
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS, 
+      },
+    });
+
+    const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: 'hr@kairosglobalsolutions.com',
       replyTo: email,
-      subject: `Inquiry: ${position} - ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nMobile: ${mobile}\nPosition: ${position}\n\nAddress:\n${address}`,
+      subject: `Application Profile: ${position} - ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nMobile: ${mobile}\nPosition Applying For: ${position}\nLocation: ${location}`,
     });
+
+    console.log("Email sent successfully:", info.messageId);
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal pipeline fault' });
+    // This prints the exact error to your Vercel Runtime Logs for debugging
+    console.error("Nodemailer Error:", error);
+    res.status(500).json({ error: 'System pipeline distribution fault', details: error.message });
   }
 }
