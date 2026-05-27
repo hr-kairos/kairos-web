@@ -1,17 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./pages/**/*.{js,jsx}",
+    "./app/**/*.{js,jsx}",
     "./components/**/*.{js,jsx}"
   ],
   theme: {
     extend: {
       colors: {
-        brand: {
-          cyan: '#06b6d4',
-          green: '#22c55e',
-          dark: '#030712'
-        }
+        brand: { primary: '#0891b2', secondary: '#10b981', dark: '#0f172a', light: '#f8fafc' }
       }
     },
   },
