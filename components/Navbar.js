@@ -1,54 +1,59 @@
+'use client';
 import Link from 'next/link';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, ChevronDown } from 'lucide-react';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const navItems = ['Home', 'Services', 'Clients', 'Contact'];
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <nav className="bg-slate-950/60 backdrop-blur-md border-b border-slate-900/80 text-white p-4 sticky top-0 z-50 w-full">
-      <div className="max-w-6xl mx-auto flex justify-between items-center w-full">
+    <nav className="fixed w-full top-0 z-50 bg-white/70 backdrop-blur-2xl border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
-          <img src="/logo.png" alt="Kairos" className="h-9 w-9 object-contain bg-slate-900 p-1 rounded-lg border border-slate-800" />
-          <span className="font-extrabold text-xl tracking-wider uppercase">
-            Kairos <span className="text-cyan-400">Global</span>
+          <img src="/logo.png" alt="Kairos" className="h-10 w-10 object-contain drop-shadow-md" onError={(e) => e.target.style.display='none'} />
+          <span className="font-extrabold text-xl tracking-tight text-slate-800">
+            Kairos Global <span className="text-cyan-600 font-light">Solutions</span>
           </span>
         </Link>
 
-        {/* Desktop Layout links */}
-        <div className="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
-          {navItems.map((item) => (
-            <Link key={item} href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="text-slate-400 hover:text-cyan-400 transition-colors">
-              {item}
-            </Link>
-          ))}
+        {/* Desktop Menu */}
+        <div className="hidden md:flex gap-8 items-center h-full">
+          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-cyan-600 transition-colors">Home</Link>
+          
+          {/* Dropdown Menu */}
+          <div 
+            className="relative h-full flex items-center"
+            onMouseEnter={() => setDropdownOpen(true)}
+            onMouseLeave={() => setDropdownOpen(false)}
+          >
+            <button className="text-sm font-semibold text-slate-600 hover:text-cyan-600 flex items-center gap-1 transition-colors">
+              Capabilities <ChevronDown size={16} />
+            </button>
+            <AnimatePresence>
+              {dropdownOpen && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+                  className="absolute top-20 left-0 w-64 bg-white/90 backdrop-blur-xl border border-slate-100 shadow-xl rounded-xl overflow-hidden py-2"
+                >
+                  <Link href="/services" className="block px-6 py-3 text-sm text-slate-600 hover:bg-cyan-50 hover:text-cyan-700">All Services Matrix</Link>
+                  <Link href="/services" className="block px-6 py-3 text-sm text-slate-600 hover:bg-cyan-50 hover:text-cyan-700">Human Capital Integration</Link>
+                  <Link href="/services" className="block px-6 py-3 text-sm text-slate-600 hover:bg-cyan-50 hover:text-cyan-700">IT Software & Cloud</Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <Link href="/clients" className="text-sm font-semibold text-slate-600 hover:text-cyan-600 transition-colors">Ecosystem</Link>
+          <Link href="/contact" className="text-sm font-semibold text-slate-600 hover:text-cyan-600 transition-colors">Contact Us</Link>
         </div>
 
-        {/* Mobile menu trigger */}
-        <button className="block md:hidden text-slate-400 hover:text-white" onClick={() => setIsOpen(!isOpen)}>
-          <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
+        {/* Mobile Toggle */}
+        <button className="md:hidden text-slate-800" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="md:hidden bg-slate-950 border-t border-slate-900 mt-4"
-          >
-            <div className="flex flex-col p-4 space-y-4">
-              {navItems.map((item) => (
-                 <Link key={item} href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} onClick={() => setIsOpen(false)} className="text-slate-300 hover:text-cyan-400 font-medium text-base">
-                   {item}
-                 </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </nav>
   );
 }
