@@ -1,63 +1,55 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-const tabSchedules = {
-  "All Enterprise Partners": [
-    "Wipro", "J Connect", "Kapitus", "KPMG", "RLE India", "LTIMindtree", "Airtel", 
-    "Royal Enfield", "Motherson", "Hinduja Tech", "Saint-Gobain", "IBM", "EY", 
-    "Capgemini", "Infosys", "Hexaware Technologies"
-  ],
-  "Technology & Cloud": ["Wipro", "IBM", "Infosys", "Capgemini", "LTIMindtree", "Hexaware Technologies"],
-  "Financial Consulting": ["KPMG", "EY", "Kapitus", "J Connect"],
-  "Automotive & Heavy Industry": ["Royal Enfield", "Motherson", "Hinduja Tech", "Saint-Gobain", "RLE India", "Airtel"]
-};
+import { motion } from 'framer-motion';
+import { Briefcase, Building2, Cpu, Globe, Database, MonitorSmartphone, Code, Shield } from 'lucide-react';
 
 export default function Clients() {
-  const [activeTab, setActiveTab] = useState("All Enterprise Partners");
+  const partners = [
+    { name: "Wipro", icon: Code, color: "text-blue-500" },
+    { name: "J Connect", icon: Globe, color: "text-cyan-500" },
+    { name: "Kapitus", icon: Building2, color: "text-emerald-500" },
+    { name: "KPMG", icon: Briefcase, color: "text-indigo-500" },
+    { name: "RLE India", icon: Cpu, color: "text-orange-500" },
+    { name: "LTIMindtree", icon: Database, color: "text-purple-500" },
+    { name: "Airtel", icon: MonitorSmartphone, color: "text-red-500" },
+    { name: "Royal Enfield", icon: Shield, color: "text-slate-700" },
+    { name: "Motherson", icon: Building2, color: "text-teal-600" },
+    { name: "Hinduja Tech", icon: Cpu, color: "text-blue-600" },
+    { name: "Saint-Gobain", icon: Globe, color: "text-sky-500" },
+    { name: "IBM", icon: Code, color: "text-blue-800" },
+    { name: "EY", icon: Briefcase, color: "text-yellow-500" },
+    { name: "Capgemini", icon: Database, color: "text-cyan-700" },
+    { name: "Infosys", icon: MonitorSmartphone, color: "text-indigo-600" },
+    { name: "Hexaware", icon: Shield, color: "text-emerald-600" }
+  ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-16 px-4 md:px-6 box-border">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">Ecosystem <span className="gradient-text">Alliances</span></h1>
-        <p className="text-slate-400 max-w-xl mx-auto text-sm md:text-base">Operational validation catalogs across partner corporate nodes.</p>
+    <div className="pt-24 pb-16 px-6 max-w-7xl mx-auto w-full">
+      <div className="text-center mb-16">
+        <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">Ecosystem <span className="text-gradient">Alliances</span></h1>
+        <p className="text-slate-600 max-w-2xl mx-auto text-lg font-medium">Integrated seamlessly with global industry leaders and technical infrastructure networks.</p>
       </div>
 
-      {/* Tab select dashboard bar */}
-      <div className="flex flex-wrap gap-2 justify-center mb-10 border-b border-slate-900/80 pb-6">
-        {Object.keys(tabSchedules).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition-all ${
-              activeTab === tab ? 'bg-slate-900 border border-cyan-500/30 text-cyan-400' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Grid container layout panel */}
-      <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full">
-        <AnimatePresence mode="popLayout">
-          {tabSchedules[activeTab].map((client) => (
-            <motion.div
-              layout
-              key={client}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-              className="bg-slate-900/30 border border-slate-900/80 p-6 rounded-xl flex flex-col items-center justify-center h-28 hover:border-cyan-500/20 transition-all duration-300"
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        {partners.map((partner, i) => {
+          const IconComponent = partner.icon;
+          return (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true }} 
+              transition={{ delay: i * 0.05 }}
+              key={partner.name} 
+              className="glass-panel p-6 rounded-[2rem] flex flex-col items-center justify-center text-center group cursor-pointer"
             >
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 border border-slate-800 flex items-center justify-center font-black text-xs text-cyan-400 tracking-wider mb-2">
-                {client.substring(0, 2).toUpperCase()}
+              <div className="w-16 h-16 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <IconComponent className={`${partner.color} w-8 h-8`} />
               </div>
-              <span className="text-xs md:text-sm font-bold text-slate-300">{client}</span>
+              <span className="text-sm font-bold text-slate-700 group-hover:text-cyan-600 transition-colors">
+                {partner.name}
+              </span>
             </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+          )
+        })}
+      </div>
     </div>
   );
 }
