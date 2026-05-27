@@ -8,21 +8,18 @@ export default async function handler(req, res) {
   const { name, email, mobile, position, currentLocation, preferredLocation } = req.body;
 
   try {
-    // Switched to Microsoft Office 365 SMTP Servers
+    // Switched back to Gmail for the secure Mailer Bot
     const transporter = nodemailer.createTransport({
-      host: 'smtp.office365.com',
-      port: 587,
-      secure: false, // Must be false for port 587
-      requireTLS: true,
+      service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, 
+        user: process.env.EMAIL_USER, // The new bot @gmail.com address
+        pass: process.env.EMAIL_PASS, // The bot's App Password
       },
     });
 
     const info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: 'hr@kairosglobalsolutions.com',
+      to: 'hr@kairosglobalsolutions.com', // Your actual corporate inbox!
       replyTo: email,
       subject: `Application Profile: ${position} - ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nMobile: ${mobile}\nPosition Applying For: ${position}\nCurrent Location: ${currentLocation}\nPreferred Location: ${preferredLocation}`,
@@ -31,7 +28,7 @@ export default async function handler(req, res) {
     console.log("Email sent successfully:", info.messageId);
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error("Nodemailer Microsoft Error:", error);
+    console.error("Nodemailer Error:", error);
     res.status(500).json({ error: 'System pipeline distribution fault', details: error.message });
   }
 }
