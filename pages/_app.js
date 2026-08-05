@@ -1,9 +1,8 @@
 import '../styles/globals.css';
-import Navbar from '../components/Navbar'; // <-- This line fixes the crash!
+import Navbar from '../components/Navbar';
 import Background from '../components/Background';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { trackPageView } from '../utils/telemetry';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -11,49 +10,51 @@ export default function App({ Component, pageProps, router }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1200);
+    const timer = setTimeout(() => setLoading(false), 900);
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    const handleRouteChange = (url) => trackPageView(url);
-    router.events.on('routeChangeComplete', handleRouteChange);
-
-    // Track initial page view
-    trackPageView(router.asPath);
-
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
-
   return (
-    <div className="w-full flex flex-col min-h-screen cyber-mesh-bg perspective-wrapper">
+    <div className="w-full flex flex-col min-h-screen">
       <AnimatePresence mode="wait">
         {loading ? (
-          <motion.div 
+          <motion.div
             key="loader"
-            exit={{ opacity: 0, scale: 1.05, filter: "blur(8px)" }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-slate-950 z-[100] flex flex-col items-center justify-center"
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            style={{
+              position: 'fixed', inset: 0, background: '#F9F7F4',
+              zIndex: 100, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', gap: '1rem',
+            }}
           >
-            <div className="w-10 h-10 border-2 border-t-cyan-400 border-r-emerald-400 border-slate-800 rounded-xl animate-spin mb-4"></div>
-            <h1 className="text-lg font-black tracking-[0.3em] text-white">KAIROS GLOBAL</h1>
+            <div
+              style={{
+                width: '36px', height: '36px',
+                border: '2.5px solid rgba(0,0,0,0.08)',
+                borderTopColor: '#0891b2', borderRadius: '50%',
+                animation: 'spin 0.75s linear infinite',
+              }}
+            />
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.2em', color: '#9CA3AF', textTransform: 'uppercase' }}>
+              Kairos Global
+            </span>
           </motion.div>
         ) : (
-          <div className="w-full flex flex-col min-h-screen">
-            <Navbar />
+          <div className="w-full flex flex-col min-h-screen" style={{ position: 'relative', zIndex: 1 }}>
             <Background />
+            <Navbar />
             <Analytics />
             <SpeedInsights />
             <AnimatePresence mode="wait">
-              <motion.div 
+              <motion.div
                 key={router.route}
-                initial={{ opacity: 0, rotateX: 6, y: 10, transformOrigin: "top center" }}
-                animate={{ opacity: 1, rotateX: 0, y: 0 }}
-                exit={{ opacity: 0, rotateX: -6, y: -10 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
-                className="w-full flex-grow flex flex-col box-border"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                className="w-full flex-grow flex flex-col"
               >
                 <Component {...pageProps} />
               </motion.div>
