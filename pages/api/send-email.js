@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import path from 'path';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -35,8 +36,18 @@ export default async function handler(req, res) {
       },
     });
 
-    // Handle resume attachment if present
+    // Define attachments array and embed company logo using Content-ID (CID) for Gmail offline rendering
     const attachments = [];
+    
+    // Embed the transparent company logo
+    const logoPath = path.join(process.cwd(), 'public', 'logo-transparentbg.png');
+    attachments.push({
+      filename: 'logo-transparentbg.png',
+      path: logoPath,
+      cid: 'companylogo',
+    });
+
+    // Handle resume attachment if present
     if (resume && resume.data) {
       console.log(`[API] Attaching resume file: ${resume.name} (${resume.type})`);
       attachments.push({
@@ -52,7 +63,7 @@ export default async function handler(req, res) {
         <div style="max-width: 600px; margin: 0 auto; background: #FFFFFF; border-radius: 20px; overflow: hidden; border: 1px solid #E5E7EB; box-shadow: 0 12px 30px rgba(0,0,0,0.06);">
           <!-- Header with Logo -->
           <div style="background: #0F0F0F; padding: 32px 28px; text-align: center;">
-            <img src="https://kairosglobalsolutions.vercel.app/logo-transparentbg.png" alt="Kairos Logo" style="height: 48px; object-fit: contain; margin-bottom: 12px;" />
+            <img src="cid:companylogo" alt="Kairos Logo" style="height: 48px; object-fit: contain; margin-bottom: 12px;" />
             <h1 style="color: #FFFFFF; font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.02em;">
               Kairos Global <span style="color: #0891b2;">Solutions</span>
             </h1>
@@ -101,7 +112,7 @@ export default async function handler(req, res) {
 
           <!-- Footer Signature -->
           <div style="background: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #F3F4F6; font-size: 12px; color: #9CA3AF;">
-            Official Portal Submission • Kairos Global Solutions • Kerala, India
+            Official Portal Submission • Kairos Global Solutions • Kerala (HQ) • Branches: Chennai, Bangalore, Pune
           </div>
         </div>
       </div>
@@ -113,7 +124,7 @@ export default async function handler(req, res) {
         <div style="max-width: 600px; margin: 0 auto; background: #FFFFFF; border-radius: 20px; overflow: hidden; border: 1px solid #E5E7EB; box-shadow: 0 12px 30px rgba(0,0,0,0.06);">
           <!-- Header with Logo -->
           <div style="background: #0F0F0F; padding: 32px 28px; text-align: center;">
-            <img src="https://kairosglobalsolutions.vercel.app/logo-transparentbg.png" alt="Kairos Logo" style="height: 48px; object-fit: contain; margin-bottom: 12px;" />
+            <img src="cid:companylogo" alt="Kairos Logo" style="height: 48px; object-fit: contain; margin-bottom: 12px;" />
             <h1 style="color: #FFFFFF; font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.02em;">
               Kairos Global <span style="color: #0891b2;">Solutions</span>
             </h1>
@@ -141,6 +152,20 @@ export default async function handler(req, res) {
               <p style="margin: 6px 0; font-size: 14px; color: #1F2937;"><strong>Preferred Location:</strong> ${preferredLocation}</p>
             </div>
 
+            <!-- Follow us on LinkedIn Card -->
+            <div style="background: rgba(10, 102, 194, 0.05); border: 1px solid rgba(10, 102, 194, 0.15); border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 28px;">
+              <h4 style="margin: 0 0 6px 0; font-size: 15px; color: #0A66C2; font-weight: 800; display: flex; alignItems: center; justifyContent: center; gap: 0.4rem;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn Logo" style="height: 16px; width: 16px; object-fit: contain; vertical-align: middle;" />
+                <span>Join Our Professional Network</span>
+              </h4>
+              <p style="margin: 0 0 16px 0; font-size: 13px; color: #4B5563; line-height: 1.55;">
+                Follow Kairos Global Solutions on LinkedIn to receive real-time placement alerts, consulting frameworks, and enterprise updates.
+              </p>
+              <a href="https://www.linkedin.com/company/kairos-global-solutions-official/" target="_blank" style="display: inline-block; background: #0A66C2; color: #FFFFFF; font-weight: 700; font-size: 13px; text-decoration: none; padding: 10px 24px; border-radius: 8px;">
+                Follow Us on LinkedIn →
+              </a>
+            </div>
+
             <p style="color: #6B7280; font-size: 14px; line-height: 1.6; margin: 0;">
               If you need to update any information, please reply directly to this email or reach us at <a href="mailto:hr@kairosglobalsolutions.com" style="color: #0891b2; font-weight: 600; text-decoration: none;">hr@kairosglobalsolutions.com</a>.
             </p>
@@ -149,7 +174,7 @@ export default async function handler(req, res) {
           <!-- Footer Signature -->
           <div style="background: #F9FAFB; padding: 24px 32px; border-top: 1px solid #F3F4F6; font-size: 13px; color: #6B7280; text-align: center;">
             <p style="margin: 0 0 4px 0; font-weight: 700; color: #0F0F0F;">Kairos Global Solutions</p>
-            <p style="margin: 0; color: #9CA3AF;">Headquartered in Kerala, India • Enterprise Global Solutions</p>
+            <p style="margin: 0; color: #9CA3AF;">Headquartered in Kerala, India • Branches: Chennai, Bangalore, Pune</p>
           </div>
         </div>
       </div>
@@ -174,6 +199,7 @@ export default async function handler(req, res) {
       to: email,
       subject: `Application Received — Kairos Global Solutions`,
       html: userAutoReplyHtml,
+      attachments: attachments, // Include the logo attachment so it renders locally in candidate inbox
     });
     console.log("[API] Applicant auto-reply successfully sent.");
 

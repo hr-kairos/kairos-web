@@ -28,14 +28,14 @@ export default function Document() {
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Kairos Global Solutions | Enterprise Consulting & Human Capital" />
         <meta property="og:description" content="Architecting the future of global commerce with high-performance consulting, adaptive tech frameworks, and human capital infrastructure." />
-        <meta property="og:image" content="https://kairosglobalsolutions.vercel.app/logo-transparentbg.png" />
+        <meta property="og:image" content="https://kairosglobalsolutions.vercel.app/kairos_global_solutions_official_cover.jpg" />
         <meta property="og:url" content="https://kairosglobalsolutions.vercel.app" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Kairos Global Solutions" />
         <meta name="twitter:description" content="Enterprise consulting, technology frameworks, and executive human capital." />
-        <meta name="twitter:image" content="https://kairosglobalsolutions.vercel.app/logo-transparentbg.png" />
+        <meta name="twitter:image" content="https://kairosglobalsolutions.vercel.app/kairos_global_solutions_official_cover.jpg" />
 
         {/* Fonts & Icons */}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />

@@ -75,7 +75,7 @@ export default function Contact() {
 
   return (
     <div
-      className="w-full max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center flex-grow"
+      className="w-full max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-start flex-grow"
       style={{ paddingTop: '110px', paddingBottom: '80px', position: 'relative' }}
     >
       {/* Full-screen Dark Spotlight Backdrop Overlay */}

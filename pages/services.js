@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
@@ -77,6 +77,17 @@ const services = [
 
 export default function Services() {
   const [selectedSvc, setSelectedSvc] = useState(null);
+
+  useEffect(() => {
+    if (selectedSvc) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedSvc]);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-6" style={{ paddingTop: '110px', paddingBottom: '80px' }}>
