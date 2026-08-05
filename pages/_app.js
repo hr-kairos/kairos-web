@@ -4,6 +4,8 @@ import Background from '../components/Background';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { trackPageView } from '../utils/telemetry';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export default function App({ Component, pageProps, router }) {
   const [loading, setLoading] = useState(true);
@@ -42,6 +44,8 @@ export default function App({ Component, pageProps, router }) {
           <div className="w-full flex flex-col min-h-screen">
             <Navbar />
             <Background />
+            <Analytics />
+            <SpeedInsights />
             <AnimatePresence mode="wait">
               <motion.div 
                 key={router.route}

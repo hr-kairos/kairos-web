@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@sentry/nextjs": "^10.69.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "framer-motion": "latest",
     "lucide-react": "latest",
     "next": "latest",
