@@ -1,6 +1,4 @@
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -15,8 +13,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    const fromAddress = process.env.EMAIL_FROM || 'onboarding@resend.dev';
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
     const adminEmail = process.env.EMAIL_TO || 'hr@kairosglobalsolutions.com';
+
+    if (!emailUser || !emailPass) {
+      console.error("Missing Gmail credentials in environment variables.");
+      return res.status(500).json({ error: 'Mail transport configuration missing.' });
+    }
+
+    // Configure Nodemailer for Gmail SMTP
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: emailUser,
+        pass: emailPass,
+      },
+    });
 
     // 1. Dispatch Notification Email to Kairos Admin Team (HR)
     const adminEmailHtml = `
@@ -75,19 +88,6 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    const adminResult = await resend.emails.send({
-      from: fromAddress,
-      to: adminEmail,
-      replyTo: email,
-      subject: `Application Profile: ${position} - ${name}`,
-      html: adminEmailHtml,
-    });
-
-    if (adminResult.error) {
-      console.error("Resend Admin Email Error:", adminResult.error);
-      return res.status(500).json({ error: 'Failed to send internal admin notification.', details: adminResult.error.message });
-    }
-
     // 2. Dispatch Automatic Executive Confirmation / Auto-Reply Email To Applicant
     const userAutoReplyHtml = `
       <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif; background-color: #F9F7F4; padding: 40px 20px; color: #0F0F0F;">
@@ -136,21 +136,26 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    // Attempt auto-reply email dispatch
-    try {
-      await resend.emails.send({
-        from: fromAddress,
-        to: email,
-        subject: `Application Received — Kairos Global Solutions`,
-        html: userAutoReplyHtml,
-      });
-    } catch (userEmailErr) {
-      console.warn("Auto-reply sandbox note:", userEmailErr.message);
-    }
+    // Send Admin Notification (HR)
+    await transporter.sendMail({
+      from: `"Kairos Portal" <${emailUser}>`,
+      to: adminEmail,
+      replyTo: email,
+      subject: `Application Profile: ${position} - ${name}`,
+      html: adminEmailHtml,
+    });
 
-    return res.status(200).json({ success: true, message: 'Inquiry dispatched successfully.' });
+    // Send Auto-Reply to Applicant
+    await transporter.sendMail({
+      from: `"Kairos Global Solutions" <${emailUser}>`,
+      to: email,
+      subject: `Application Received — Kairos Global Solutions`,
+      html: userAutoReplyHtml,
+    });
+
+    return res.status(200).json({ success: true, message: 'Inquiries sent successfully.' });
   } catch (err) {
-    console.error("System Error during transmission:", err);
+    console.error("Gmail Nodemailer Error:", err);
     return res.status(500).json({ error: 'System pipeline distribution fault', details: err.message });
   }
 }
