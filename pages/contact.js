@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { trackEvent, reportError } from '../utils/telemetry';
 
 export default function Contact() {
   const [status, setStatus] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus('Sending…');
+    setStatus('sending');
 
     const formData = {
       name: e.target.name.value,
@@ -27,16 +29,18 @@ export default function Contact() {
       });
 
       if (response.ok) {
-        setStatus('✓ Application received. We will be in touch shortly.');
+        setStatus('success');
+        setShowToast(true);
         trackEvent('contact_form_submission_success', { position: formData.position });
         e.target.reset();
+        setTimeout(() => setShowToast(false), 5000);
       } else {
-        setStatus('Something went wrong. Please try again or email us directly.');
+        setStatus('error');
         trackEvent('contact_form_submission_failed', { position: formData.position, status: response.status });
         reportError(new Error(`Contact form API returned status ${response.status}`), { formData });
       }
     } catch (err) {
-      setStatus('Connection issue. Please try again.');
+      setStatus('error');
       trackEvent('contact_form_submission_failed', { position: formData.position, error: err.message });
       reportError(err, { formData });
     }
@@ -44,225 +48,228 @@ export default function Contact() {
 
   return (
     <div
-      className="w-full max-w-6xl mx-auto px-6 flex-grow"
+      className="w-full max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-center flex-grow"
       style={{ paddingTop: '110px', paddingBottom: '80px' }}
     >
-      {/* Page header */}
-      <div className="text-center" style={{ marginBottom: '3.5rem' }}>
-        <span className="badge" style={{ display: 'inline-flex', marginBottom: '1.25rem' }}>
-          <i className="fas fa-paper-plane" style={{ fontSize: '0.65rem' }} />
-          Get In Touch
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            style={{
+              position: 'fixed',
+              top: '90px',
+              right: '24px',
+              zIndex: 100,
+              background: 'rgba(255, 255, 255, 0.92)',
+              border: '1px solid rgba(16, 185, 129, 0.3)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              boxShadow: '0 12px 36px rgba(16, 185, 129, 0.15)',
+              borderRadius: '1.25rem',
+              padding: '1rem 1.4rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.8rem',
+            }}
+          >
+            <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <i className="fas fa-check" style={{ color: '#10b981', fontSize: '0.85rem' }} />
+            </div>
+            <div>
+              <h4 style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700, color: '#0F0F0F' }}>Message Received</h4>
+              <p style={{ margin: 0, fontSize: '0.78rem', color: '#6B7280' }}>Our executive team will respond within 24 hours.</p>
+            </div>
+            <button
+              onClick={() => setShowToast(false)}
+              style={{ background: 'none', border: 'none', color: '#9CA3AF', cursor: 'pointer', marginLeft: '0.5rem' }}
+            >
+              <i className="fas fa-times" style={{ fontSize: '0.8rem' }} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Left column: Information */}
+      <motion.div
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+      >
+        <span className="badge" style={{ display: 'inline-flex', marginBottom: '1.5rem' }}>
+          <i className="fas fa-paper-plane" style={{ fontSize: '0.65rem' }} /> Get In Touch
         </span>
+
         <h1
           style={{
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontSize: 'clamp(2.4rem, 5vw, 3.75rem)',
             fontWeight: 900,
             color: '#0F0F0F',
             letterSpacing: '-0.035em',
             lineHeight: 1.1,
+            marginBottom: '1.5rem',
           }}
         >
-          Connect <span className="text-gradient">With Us</span>
+          Connect <span className="text-gradient">Securely</span>
         </h1>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        {/* ── Left column: info + LinkedIn ── */}
-        <div className="flex flex-col gap-6">
-          <p style={{ color: '#6B7280', fontSize: '1.05rem', lineHeight: 1.7 }}>
-            Submit your profile to route dedicated corporate resources directly to your operation. Our team will respond within one business day.
-          </p>
+        <p style={{ color: '#6B7280', fontSize: '1.05rem', lineHeight: 1.7, marginBottom: '2.5rem' }}>
+          Submit your requirements to route dedicated corporate resources directly to your operation. Our team will respond within one business day.
+        </p>
 
-          {/* Contact details */}
-          <div className="card p-7 flex flex-col gap-5">
+        {/* Address and details */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2.5rem' }}>
+          {[
+            { icon: 'fa-envelope', color: '#0891b2', text: 'hr@kairosglobalsolutions.com', href: 'mailto:hr@kairosglobalsolutions.com' },
+            { icon: 'fa-phone', color: '#10b981', text: '+91 63793 02839', href: 'tel:+916379302839' },
+            { icon: 'fa-map-marker-alt', color: '#6366f1', text: 'Chennai, Tamil Nadu, India', href: null },
+          ].map((item) => (
             <a
-              href="mailto:hr@kairosglobalsolutions.com"
-              className="flex items-center gap-4"
-              style={{ textDecoration: 'none' }}
-            >
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  background: 'rgba(8,145,178,0.08)',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <i className="fas fa-envelope" style={{ color: '#0891b2', fontSize: '0.95rem' }} />
-              </div>
-              <span style={{ fontWeight: 600, color: '#374151', fontSize: '0.9rem' }}>
-                hr@kairosglobalsolutions.com
-              </span>
-            </a>
-
-            <a href="tel:+916379302839" className="flex items-center gap-4" style={{ textDecoration: 'none' }}>
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  background: 'rgba(16,185,129,0.08)',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <i className="fas fa-phone" style={{ color: '#10b981', fontSize: '0.95rem' }} />
-              </div>
-              <span style={{ fontWeight: 600, color: '#374151', fontSize: '0.9rem' }}>
-                +91 63793 02839
-              </span>
-            </a>
-
-            <div className="flex items-center gap-4">
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  background: 'rgba(99,102,241,0.08)',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}
-              >
-                <i className="fas fa-map-marker-alt" style={{ color: '#6366f1', fontSize: '0.95rem' }} />
-              </div>
-              <span style={{ fontWeight: 600, color: '#374151', fontSize: '0.9rem' }}>
-                Chennai, Tamil Nadu, India
-              </span>
-            </div>
-          </div>
-
-          {/* LinkedIn card */}
-          <a
-            href="https://www.linkedin.com/company/kairos-global-solutions-official/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="card flex items-center gap-5"
-            style={{
-              padding: '1.4rem 1.6rem',
-              textDecoration: 'none',
-              border: '1.5px solid rgba(10,102,194,0.15)',
-              background: 'linear-gradient(135deg, #ffffff 0%, rgba(10,102,194,0.03) 100%)',
-            }}
-          >
-            <div
+              key={item.icon}
+              href={item.href || undefined}
               style={{
-                width: '48px',
-                height: '48px',
-                background: '#0A66C2',
-                borderRadius: '12px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
+                gap: '1rem',
+                textDecoration: 'none',
+                color: '#4B5563',
+                fontSize: '0.9rem',
+                fontWeight: 600,
               }}
             >
-              <i className="fab fa-linkedin-in" style={{ color: '#fff', fontSize: '1.3rem' }} />
-            </div>
-            <div>
-              <div style={{ fontWeight: 700, color: '#0F0F0F', fontSize: '0.95rem', marginBottom: '0.2rem' }}>
-                Follow us on LinkedIn
-              </div>
-              <div style={{ color: '#6B7280', fontSize: '0.8rem' }}>
-                Kairos Global Solutions — Company Page
-              </div>
-            </div>
-            <i
-              className="fas fa-arrow-right"
-              style={{ color: '#0A66C2', fontSize: '0.85rem', marginLeft: 'auto' }}
-            />
-          </a>
-        </div>
-
-        {/* ── Right column: form ── */}
-        <div className="card p-8" style={{ borderRadius: '1.5rem' }}>
-          <h2 style={{ fontWeight: 700, fontSize: '1.1rem', color: '#0F0F0F', marginBottom: '1.5rem', letterSpacing: '-0.01em' }}>
-            Submit Your Profile
-          </h2>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              required
-              className="glass-input w-full px-4 py-3 text-sm"
-              style={{ borderRadius: '0.75rem' }}
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              required
-              className="glass-input w-full px-4 py-3 text-sm"
-              style={{ borderRadius: '0.75rem' }}
-            />
-            <input
-              type="tel"
-              name="mobile"
-              placeholder="Mobile Number"
-              required
-              className="glass-input w-full px-4 py-3 text-sm"
-              style={{ borderRadius: '0.75rem' }}
-            />
-            <input
-              type="text"
-              name="position"
-              placeholder="Position Applying For"
-              required
-              className="glass-input w-full px-4 py-3 text-sm"
-              style={{ borderRadius: '0.75rem' }}
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="currentLocation"
-                placeholder="Current Location"
-                required
-                className="glass-input w-full px-4 py-3 text-sm"
-                style={{ borderRadius: '0.75rem' }}
-              />
-              <input
-                type="text"
-                name="preferredLocation"
-                placeholder="Preferred Location"
-                required
-                className="glass-input w-full px-4 py-3 text-sm"
-                style={{ borderRadius: '0.75rem' }}
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="btn-primary w-full justify-center mt-2"
-              style={{ borderRadius: '0.85rem', padding: '0.9rem' }}
-            >
-              Submit Application
-            </button>
-
-            {status && (
-              <p
+              <div
                 style={{
-                  textAlign: 'center',
-                  fontSize: '0.85rem',
-                  fontWeight: 600,
-                  color: status.startsWith('✓') ? '#10b981' : '#ef4444',
-                  marginTop: '0.25rem',
+                  width: '40px',
+                  height: '40px',
+                  background: `${item.color}11`,
+                  borderRadius: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
                 }}
               >
-                {status}
-              </p>
-            )}
-          </form>
+                <i className={`fas ${item.icon}`} style={{ color: item.color, fontSize: '0.95rem' }} />
+              </div>
+              {item.text}
+            </a>
+          ))}
         </div>
-      </div>
+
+        {/* Simple inline LinkedIn link */}
+        <a
+          href="https://www.linkedin.com/company/kairos-global-solutions-official/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            color: '#0A66C2',
+            fontWeight: 700,
+            fontSize: '0.9rem',
+            textDecoration: 'none',
+          }}
+          className="hover:underline"
+        >
+          <i className="fab fa-linkedin" style={{ fontSize: '1.1rem' }} />
+          Follow us on LinkedIn <i className="fas fa-arrow-right" style={{ fontSize: '0.75rem' }} />
+        </a>
+      </motion.div>
+
+      {/* Right column: Form card */}
+      <motion.div
+        initial={{ opacity: 0, x: 30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0.1, ease: [0.4, 0, 0.2, 1] }}
+        className="card"
+        style={{ padding: '2.5rem' }}
+      >
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0F0F0F', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
+          Submit Your Inquiry
+        </h2>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required
+            className="glass-input"
+            style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            required
+            className="glass-input"
+            style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+          />
+          <input
+            type="tel"
+            name="mobile"
+            placeholder="Mobile Number"
+            required
+            className="glass-input"
+            style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+          />
+          <input
+            type="text"
+            name="position"
+            placeholder="Position Applying For"
+            required
+            className="glass-input"
+            style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="currentLocation"
+              placeholder="Current Location"
+              required
+              className="glass-input"
+              style={{ padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+            />
+            <input
+              type="text"
+              name="preferredLocation"
+              placeholder="Preferred Location"
+              required
+              className="glass-input"
+              style={{ padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={status === 'sending'}
+            className="btn-primary"
+            style={{ justifyContent: 'center', marginTop: '0.5rem', borderRadius: '0.85rem', padding: '0.95rem', opacity: status === 'sending' ? 0.7 : 1 }}
+          >
+            {status === 'sending' ? (
+              <span className="flex items-center gap-2">
+                <i className="fas fa-spinner fa-spin" /> Sending Inquiry…
+              </span>
+            ) : (
+              'Submit Application →'
+            )}
+          </button>
+
+          {status === 'success' && (
+            <p style={{ textAlign: 'center', color: '#10b981', fontWeight: 600, fontSize: '0.875rem', margin: '0.5rem 0 0' }}>
+              ✓ Received! We will be in touch shortly.
+            </p>
+          )}
+          {status === 'error' && (
+            <p style={{ textAlign: 'center', color: '#ef4444', fontWeight: 600, fontSize: '0.875rem', margin: '0.5rem 0 0' }}>
+              Something went wrong. Please email us directly.
+            </p>
+          )}
+        </form>
+      </motion.div>
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Capabilities' },
-  { href: '/clients', label: 'Ecosystem' },
+  { href: '/clients', label: 'Alliances' },
 ];
 
 export default function Navbar() {
@@ -36,57 +36,78 @@ export default function Navbar() {
     >
       <div
         className="max-w-7xl mx-auto px-6 flex items-center justify-between"
-        style={{ height: '72px' }}
+        style={{ height: '78px' }}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group" style={{ textDecoration: 'none' }}>
-          <div style={{ width: '38px', height: '38px', flexShrink: 0, overflow: 'hidden' }}>
-            <img
-              src="/logo-official.jpg"
-              alt="Kairos Global Solutions logo"
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                mixBlendMode: 'multiply',
-              }}
-              onError={(e) => {
-                e.target.src = '/logo.png';
-              }}
-            />
-          </div>
-          <span style={{ fontWeight: 800, fontSize: '1rem', letterSpacing: '-0.02em', color: '#0F0F0F', lineHeight: 1 }}>
+        <Link href="/" className="flex items-center gap-3.5 group" style={{ textDecoration: 'none' }}>
+          <img
+            src="/logo-transparentbg.png"
+            alt="Kairos Global Solutions logo"
+            style={{
+              height: '48px',
+              objectFit: 'contain',
+              transition: 'transform 0.2s ease',
+            }}
+            className="group-hover:scale-105"
+          />
+          <span style={{ fontWeight: 800, fontSize: '1.25rem', letterSpacing: '-0.025em', color: '#0F0F0F', lineHeight: 1 }}>
             Kairos Global{' '}
-            <span style={{ color: '#0891b2', fontWeight: 400 }}>Solutions</span>
+            <span style={{ color: '#0891b2', fontWeight: 500 }}>Solutions</span>
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                color: isActive(href) ? '#0891b2' : '#4B5563',
-                borderBottom: isActive(href) ? '2px solid #0891b2' : '2px solid transparent',
-                paddingBottom: '2px',
-                transition: 'color 0.2s, border-color 0.2s',
-                textDecoration: 'none',
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive(href)) e.currentTarget.style.color = '#0891b2';
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive(href)) e.currentTarget.style.color = '#4B5563';
-              }}
-            >
-              {label}
-            </Link>
-          ))}
-          <Link href="/contact" className="btn-primary" style={{ padding: '0.55rem 1.3rem', fontSize: '0.82rem' }}>
+        <div className="hidden md:flex items-center gap-6">
+          <div
+            style={{
+              background: 'rgba(0, 0, 0, 0.04)',
+              border: '1px solid rgba(0, 0, 0, 0.065)',
+              borderRadius: '9999px',
+              padding: '0.35rem 0.45rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+            }}
+          >
+            {navLinks.map(({ href, label }) => {
+              const active = isActive(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  style={{
+                    fontSize: '0.92rem',
+                    fontWeight: active ? 700 : 500,
+                    color: active ? '#0891b2' : '#4B5563',
+                    background: active ? '#FFFFFF' : 'transparent',
+                    border: active ? '1px solid rgba(8, 145, 178, 0.2)' : '1px solid transparent',
+                    boxShadow: active ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+                    borderRadius: '9999px',
+                    padding: '0.55rem 1.35rem',
+                    transition: 'all 0.2s ease',
+                    textDecoration: 'none',
+                    outline: 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.color = '#0F0F0F';
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.7)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      e.currentTarget.style.color = '#4B5563';
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+
+          <Link href="/contact" className="btn-primary" style={{ padding: '0.65rem 1.45rem', fontSize: '0.85rem' }}>
             Connect →
           </Link>
         </div>

@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 export default function Background() {
   return (
     <div
@@ -7,44 +9,65 @@ export default function Background() {
       {/* Warm off-white base */}
       <div className="absolute inset-0" style={{ background: '#F9F7F4' }} />
 
-      {/* Aurora blob 1 — teal, top-left */}
-      <div
-        className="absolute rounded-full"
+      {/* Floating Glass Orb 1 — Cyan, Top-Left */}
+      <motion.div
+        animate={{
+          x: [0, 30, 0],
+          y: [0, -40, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          top: '-20%',
-          left: '-15%',
+          position: 'absolute',
+          top: '-15%',
+          left: '-10%',
+          width: '55vw',
+          height: '55vw',
+          background: 'radial-gradient(circle, rgba(8,145,178,0.18) 0%, rgba(8,145,178,0.04) 50%, transparent 75%)',
+          filter: 'blur(90px)',
+          borderRadius: '50%',
+        }}
+      />
+
+      {/* Floating Glass Orb 2 — Emerald, Bottom-Right */}
+      <motion.div
+        animate={{
+          x: [0, -35, 0],
+          y: [0, 40, 0],
+          scale: [1, 1.15, 1],
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          position: 'absolute',
+          bottom: '-20%',
+          right: '-12%',
           width: '60vw',
           height: '60vw',
-          background: 'radial-gradient(circle, rgba(8,145,178,0.13) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-        }}
-      />
-
-      {/* Aurora blob 2 — emerald, bottom-right */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          bottom: '-25%',
-          right: '-20%',
-          width: '65vw',
-          height: '65vw',
-          background: 'radial-gradient(circle, rgba(16,185,129,0.09) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.03) 50%, transparent 75%)',
           filter: 'blur(100px)',
+          borderRadius: '50%',
         }}
       />
 
-      {/* Aurora blob 3 — indigo, centre-right */}
-      <div
-        className="absolute rounded-full"
+      {/* Floating Glass Orb 3 — Center Soft Cyan Glow */}
+      <motion.div
+        animate={{
+          scale: [0.9, 1.1, 0.9],
+          opacity: [0.4, 0.7, 0.4],
+        }}
+        transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          top: '25%',
-          right: '5%',
-          width: '38vw',
-          height: '38vw',
-          background: 'radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)',
-          filter: 'blur(90px)',
+          position: 'absolute',
+          top: '30%',
+          left: '35%',
+          width: '35vw',
+          height: '35vw',
+          background: 'radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+          borderRadius: '50%',
         }}
       />
+
     </div>
   );
 }

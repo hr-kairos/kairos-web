@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import Background from '../components/Background';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,15 +51,16 @@ export default function App({ Component, pageProps, router }) {
             <AnimatePresence mode="wait">
               <motion.div
                 key={router.route}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
                 className="w-full flex-grow flex flex-col"
               >
                 <Component {...pageProps} />
               </motion.div>
             </AnimatePresence>
+            <Footer />
           </div>
         )}
       </AnimatePresence>
