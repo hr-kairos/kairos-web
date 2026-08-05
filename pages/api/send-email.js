@@ -5,12 +5,15 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, mobile, position, currentLocation, preferredLocation } = req.body;
+  const { name, email, mobile, position, currentLocation, preferredLocation, resume } = req.body;
 
   // Basic validation
   if (!name || !email || !mobile || !position || !currentLocation || !preferredLocation) {
+    console.warn("Validation failed: Missing required fields.");
     return res.status(400).json({ error: 'All fields are required.' });
   }
+
+  console.log(`[API] Processing submission for ${name} - position: ${position}`);
 
   try {
     const emailUser = process.env.EMAIL_USER;
@@ -18,10 +21,11 @@ export default async function handler(req, res) {
     const adminEmail = process.env.EMAIL_TO || 'hr@kairosglobalsolutions.com';
 
     if (!emailUser || !emailPass) {
-      console.error("Missing Gmail credentials in environment variables.");
+      console.error("[API Error] Missing EMAIL_USER or EMAIL_PASS in environment variables.");
       return res.status(500).json({ error: 'Mail transport configuration missing.' });
     }
 
+    console.log(`[API] Setting up Nodemailer transporter using user: ${emailUser}`);
     // Configure Nodemailer for Gmail SMTP
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -30,6 +34,17 @@ export default async function handler(req, res) {
         pass: emailPass,
       },
     });
+
+    // Handle resume attachment if present
+    const attachments = [];
+    if (resume && resume.data) {
+      console.log(`[API] Attaching resume file: ${resume.name} (${resume.type})`);
+      attachments.push({
+        filename: resume.name,
+        content: Buffer.from(resume.data, 'base64'),
+        contentType: resume.type,
+      });
+    }
 
     // 1. Dispatch Notification Email to Kairos Admin Team (HR)
     const adminEmailHtml = `
@@ -74,15 +89,19 @@ export default async function handler(req, res) {
                 <td style="padding: 12px 8px; border-bottom: 1px solid #F3F4F6; color: #0F0F0F;">${currentLocation}</td>
               </tr>
               <tr>
-                <td style="padding: 12px 8px; color: #6B7280; font-weight: 600;">Preferred Location</td>
-                <td style="padding: 12px 8px; color: #0F0F0F; font-weight: 600;">${preferredLocation}</td>
+                <td style="padding: 12px 8px; border-bottom: 1px solid #F3F4F6; color: #6B7280; font-weight: 600;">Preferred Location</td>
+                <td style="padding: 12px 8px; border-bottom: 1px solid #F3F4F6; color: #0F0F0F; font-weight: 600;">${preferredLocation}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 8px; color: #6B7280; font-weight: 600;">Resume Attached</td>
+                <td style="padding: 12px 8px; color: #0F0F0F; font-weight: 700;">${resume && resume.data ? `Yes (${resume.name})` : 'No'}</td>
               </tr>
             </table>
           </div>
 
           <!-- Footer Signature -->
           <div style="background: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #F3F4F6; font-size: 12px; color: #9CA3AF;">
-            Official Portal Submission • Kairos Global Solutions • Kerala & Chennai, India
+            Official Portal Submission • Kairos Global Solutions • Kerala, India
           </div>
         </div>
       </div>
@@ -130,12 +149,13 @@ export default async function handler(req, res) {
           <!-- Footer Signature -->
           <div style="background: #F9FAFB; padding: 24px 32px; border-top: 1px solid #F3F4F6; font-size: 13px; color: #6B7280; text-align: center;">
             <p style="margin: 0 0 4px 0; font-weight: 700; color: #0F0F0F;">Kairos Global Solutions</p>
-            <p style="margin: 0; color: #9CA3AF;">Headquartered in Kerala, India with a branch office in Chennai • Enterprise Global Solutions</p>
+            <p style="margin: 0; color: #9CA3AF;">Headquartered in Kerala, India • Enterprise Global Solutions</p>
           </div>
         </div>
       </div>
     `;
 
+    console.log(`[API] Dispatching notification email to HR admin: ${adminEmail}`);
     // Send Admin Notification (HR)
     await transporter.sendMail({
       from: `"Kairos Portal" <${emailUser}>`,
@@ -143,8 +163,11 @@ export default async function handler(req, res) {
       replyTo: email,
       subject: `Application Profile: ${position} - ${name}`,
       html: adminEmailHtml,
+      attachments: attachments,
     });
+    console.log("[API] HR admin notification successfully sent.");
 
+    console.log(`[API] Dispatching auto-reply email to applicant: ${email}`);
     // Send Auto-Reply to Applicant
     await transporter.sendMail({
       from: `"Kairos Global Solutions" <${emailUser}>`,
@@ -152,10 +175,11 @@ export default async function handler(req, res) {
       subject: `Application Received — Kairos Global Solutions`,
       html: userAutoReplyHtml,
     });
+    console.log("[API] Applicant auto-reply successfully sent.");
 
     return res.status(200).json({ success: true, message: 'Inquiries sent successfully.' });
   } catch (err) {
-    console.error("Gmail Nodemailer Error:", err);
+    console.error("[API Error] Detail logs during dispatch:", err);
     return res.status(500).json({ error: 'System pipeline distribution fault', details: err.message });
   }
 }

@@ -61,20 +61,6 @@ const services = [
   },
   {
     num: '05',
-    title: 'Event Management',
-    desc: 'Comprehensive structural planning, layout validation, coordination metrics, and large-scale corporate summits.',
-    icon: 'fa-calendar-check',
-    color: '#ec4899',
-    bg: 'rgba(236,72,153,0.08)',
-    details: [
-      'Global Leadership Summits & Conferences',
-      'Corporate Product Launches & Press Events',
-      'Venue Logistics & Technical Operations',
-      'Delegate Experience & Engagement Protocols',
-    ],
-  },
-  {
-    num: '06',
     title: 'Business Consulting',
     desc: 'Continuous market alignment profiling, optimization planning, and complete restructuring architecture for modern enterprises.',
     icon: 'fa-chart-line',

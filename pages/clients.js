@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const partners = [
   { name: 'TCS', logo: '/tcs.png', category: 'IT & Cloud' },
   { name: 'Wipro', logo: '/wipro.png', category: 'IT & Cloud' },
-  { name: 'Infosys', logo: '/infosys.png', category: 'IT & Cloud' },
+  { name: 'Infosys', logo: '/infosyslogo.png', category: 'IT & Cloud' },
   { name: 'Capgemini', logo: '/capgemini.png', category: 'IT & Cloud' },
   { name: 'IBM', logo: '/ibmlogo.png', category: 'IT & Cloud' },
   { name: 'LTIMindtree', logo: '/ltimindtree.png', category: 'IT & Cloud' },
@@ -29,6 +29,7 @@ const row2 = [...partners.slice(8), ...partners.slice(0, 8), ...partners.slice(8
 
 function LogoCard({ partner, activeCategory }) {
   const isSelected = activeCategory === 'All' || partner.category === activeCategory;
+  const isJConnect = partner.name === 'J Connect';
 
   return (
     <div
@@ -46,11 +47,11 @@ function LogoCard({ partner, activeCategory }) {
         transition: 'all 0.3s ease',
         opacity: isSelected ? 1 : 0.25,
         filter: isSelected ? 'none' : 'grayscale(100%)',
-        transform: isSelected ? 'scale(1)' : 'scale(0.92)',
+        transform: isSelected ? (isJConnect ? 'scale(1.22)' : 'scale(1)') : 'scale(0.92)',
       }}
       className="hover:scale-105"
     >
-      <div style={{ width: '120px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: isJConnect ? '150px' : '120px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <img
           src={partner.logo}
           alt={partner.name}
@@ -59,6 +60,7 @@ function LogoCard({ partner, activeCategory }) {
             maxHeight: '100%',
             objectFit: 'contain',
             mixBlendMode: 'multiply',
+            transform: isJConnect ? 'scale(1.35)' : 'none',
           }}
           onError={(e) => (e.target.style.opacity = '0')}
         />

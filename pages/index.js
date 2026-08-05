@@ -178,7 +178,7 @@ export default function Home() {
             {...fadeUp(0.2)}
             style={{ color: '#6B7280', fontSize: '1.05rem', lineHeight: 1.7, maxWidth: '460px', marginBottom: '2.25rem' }}
           >
-            Headquartered in Kerala with a branch in Chennai, Kairos Global Solutions delivers high-performance
+            Headquartered in Kerala, Kairos Global Solutions delivers high-performance
             enterprise consulting, adaptive technology frameworks, and human capital infrastructure.
           </motion.p>
 
