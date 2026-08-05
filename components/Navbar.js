@@ -10,7 +10,7 @@ export default function Navbar() {
   const isActive = (path) => currentPath === path;
 
   return (
-    <nav className="fixed w-full top-0 z-50 background: rgba(255, 255, 255, 0.6) backdrop-blur-xl border-b border-white/60 shadow-sm transition-all">
+    <nav className="fixed w-full top-0 z-50 bg-white/60 backdrop-blur-xl border-b border-white/60 shadow-sm transition-all">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3">
           <img src="/logo.png" alt="Kairos" className="h-10 w-10 object-contain drop-shadow-md" onError={(e) => e.target.style.display='none'} />

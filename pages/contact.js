@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { trackEvent, reportError } from '../utils/telemetry';
 
 export default function Contact() {
   const [status, setStatus] = useState('');
@@ -12,12 +13,27 @@ export default function Contact() {
       position: e.target.position.value, currentLocation: e.target.currentLocation.value, preferredLocation: e.target.preferredLocation.value,
     };
 
-    const response = await fetch('/api/send-email', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData),
-    });
+    trackEvent('contact_form_submission_started', { position: formData.position });
 
-    if (response.ok) { setStatus('Application securely routed to internal networks.'); e.target.reset(); } 
-    else { setStatus('Transmission bottleneck detected. Please retry.'); }
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatus('Application securely routed to internal networks.');
+        trackEvent('contact_form_submission_success', { position: formData.position });
+        e.target.reset();
+      } else {
+        setStatus('Transmission bottleneck detected. Please retry.');
+        trackEvent('contact_form_submission_failed', { position: formData.position, status: response.status });
+        reportError(new Error(`Contact form API returned status ${response.status}`), { formData });
+      }
+    } catch (err) {
+      setStatus('Transmission bottleneck detected. Please retry.');
+      trackEvent('contact_form_submission_failed', { position: formData.position, error: err.message });
+      reportError(err, { formData });
+    }
   };
 
   return (

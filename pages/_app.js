@@ -1,7 +1,9 @@
 import '../styles/globals.css';
 import Navbar from '../components/Navbar'; // <-- This line fixes the crash!
+import Background from '../components/Background';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { trackPageView } from '../utils/telemetry';
 
 export default function App({ Component, pageProps, router }) {
   const [loading, setLoading] = useState(true);
@@ -10,6 +12,18 @@ export default function App({ Component, pageProps, router }) {
     const timer = setTimeout(() => setLoading(false), 1200);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const handleRouteChange = (url) => trackPageView(url);
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    // Track initial page view
+    trackPageView(router.asPath);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
 
   return (
     <div className="w-full flex flex-col min-h-screen cyber-mesh-bg perspective-wrapper">
@@ -27,6 +41,7 @@ export default function App({ Component, pageProps, router }) {
         ) : (
           <div className="w-full flex flex-col min-h-screen">
             <Navbar />
+            <Background />
             <AnimatePresence mode="wait">
               <motion.div 
                 key={router.route}
