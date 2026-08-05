@@ -124,7 +124,7 @@ export default function Contact() {
           {[
             { icon: 'fa-envelope', color: '#0891b2', text: 'hr@kairosglobalsolutions.com', href: 'mailto:hr@kairosglobalsolutions.com' },
             { icon: 'fa-phone', color: '#10b981', text: '+91 63793 02839', href: 'tel:+916379302839' },
-            { icon: 'fa-map-marker-alt', color: '#6366f1', text: 'Chennai, Tamil Nadu, India', href: null },
+            { icon: 'fa-map-marker-alt', color: '#6366f1', text: 'HQ: Kerala | Branch: Chennai, India', href: null },
           ].map((item) => (
             <a
               key={item.icon}

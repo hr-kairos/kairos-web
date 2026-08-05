@@ -10,7 +10,8 @@ export default function Document() {
     sameAs: ['https://www.linkedin.com/company/kairos-global-solutions-official/'],
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Chennai',
+      addressLocality: 'Kerala',
+      addressRegion: 'Kerala',
       addressCountry: 'India',
     },
     description: 'Enterprise consulting, executive staffing logistics, technology readiness bootcamps, and business advisory frameworks.',
@@ -20,8 +21,8 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <meta charSet="utf-8" />
-        <meta name="description" content="Kairos Global Solutions delivers high-performance enterprise consulting, executive staffing logistics, adaptive technology frameworks, and human capital infrastructure globally. Headquartered in Chennai, India." />
-        <meta name="keywords" content="Kairos Global Solutions, Executive Staffing Chennai, IT Consulting, Corporate L&D Bootcamps, Legal Governance Frameworks, HR Architecture, Business Restructuring" />
+        <meta name="description" content="Kairos Global Solutions delivers high-performance enterprise consulting, executive staffing logistics, adaptive technology frameworks, and human capital infrastructure globally. Headquartered in Kerala, India with a branch in Chennai." />
+        <meta name="keywords" content="Kairos Global Solutions, Executive Staffing Kerala, Executive Staffing Chennai, IT Consulting, Corporate L&D Bootcamps, Legal Governance Frameworks, HR Architecture, Business Restructuring" />
         <meta name="author" content="Kairos Global Solutions" />
 
         {/* Open Graph / Social Share Card (LinkedIn & WhatsApp) */}

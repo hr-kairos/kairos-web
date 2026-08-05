@@ -35,7 +35,7 @@ export default function Footer() {
               </span>
             </div>
             <p style={{ color: '#6B7280', fontSize: '0.875rem', lineHeight: 1.65, margin: 0 }}>
-              Headquartered in Chennai, India. Architecting adaptive enterprise consulting, technology frameworks, and human capital infrastructure globally.
+              Headquartered in Kerala, India with a branch office in Chennai. Architecting adaptive enterprise consulting, technology frameworks, and human capital infrastructure globally.
             </p>
           </div>
 
@@ -109,7 +109,7 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <span>© {new Date().getFullYear()} Kairos Global Solutions. All rights reserved.</span>
             <span style={{ opacity: 0.4 }}>•</span>
-            <span style={{ color: '#6B7280' }}>Chennai, India</span>
+            <span style={{ color: '#6B7280' }}>Kerala & Chennai, India</span>
           </div>
 
           <button

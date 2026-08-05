@@ -99,7 +99,7 @@ function HeroVisual() {
         }}
       >
         <span style={{ color: '#0891b2' }}>📍</span>
-        <span>HQ • Chennai</span>
+        <span>HQ • Kerala</span>
       </motion.div>
 
       {/* Floating Badge 2 — Bottom-Right (Synced 60fps Motion) */}
@@ -178,7 +178,7 @@ export default function Home() {
             {...fadeUp(0.2)}
             style={{ color: '#6B7280', fontSize: '1.05rem', lineHeight: 1.7, maxWidth: '460px', marginBottom: '2.25rem' }}
           >
-            Headquartered in Chennai, Kairos Global Solutions delivers high-performance
+            Headquartered in Kerala with a branch in Chennai, Kairos Global Solutions delivers high-performance
             enterprise consulting, adaptive technology frameworks, and human capital infrastructure.
           </motion.p>
 

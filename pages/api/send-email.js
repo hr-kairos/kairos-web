@@ -82,7 +82,7 @@ export default async function handler(req, res) {
 
           <!-- Footer Signature -->
           <div style="background: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #F3F4F6; font-size: 12px; color: #9CA3AF;">
-            Official Portal Submission • Kairos Global Solutions • Chennai, India
+            Official Portal Submission • Kairos Global Solutions • Kerala & Chennai, India
           </div>
         </div>
       </div>
@@ -130,7 +130,7 @@ export default async function handler(req, res) {
           <!-- Footer Signature -->
           <div style="background: #F9FAFB; padding: 24px 32px; border-top: 1px solid #F3F4F6; font-size: 13px; color: #6B7280; text-align: center;">
             <p style="margin: 0 0 4px 0; font-weight: 700; color: #0F0F0F;">Kairos Global Solutions</p>
-            <p style="margin: 0; color: #9CA3AF;">Headquartered in Chennai, India • Enterprise Global Solutions</p>
+            <p style="margin: 0; color: #9CA3AF;">Headquartered in Kerala, India with a branch office in Chennai • Enterprise Global Solutions</p>
           </div>
         </div>
       </div>
