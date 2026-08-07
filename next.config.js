@@ -57,8 +57,6 @@ const nextConfig = {
               "base-uri 'self'",
               // Form submissions only to self
               "form-action 'self'",
-              // Require Trusted Types for DOM XSS prevention
-              "require-trusted-types-for 'script'",
             ].join('; '),
           },
           // Prevent DNS prefetching to external domains
