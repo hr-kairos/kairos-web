@@ -47,6 +47,8 @@ const nextConfig = {
               "img-src 'self' data: https://upload.wikimedia.org https://*.vercel.app",
               // API connections: self + Vercel + PostHog + Sentry
               "connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://us.i.posthog.com https://*.sentry.io",
+              // Prevent clickjacking via frame-ancestors
+              "frame-ancestors 'none'",
               // Frames: deny all
               "frame-src 'none'",
               // Object/embed: deny
@@ -55,6 +57,8 @@ const nextConfig = {
               "base-uri 'self'",
               // Form submissions only to self
               "form-action 'self'",
+              // Require Trusted Types for DOM XSS prevention
+              "require-trusted-types-for 'script'",
             ].join('; '),
           },
           // Prevent DNS prefetching to external domains
