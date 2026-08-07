@@ -74,7 +74,7 @@ function HeroVisual() {
         />
       </motion.div>
 
-      {/* Floating Badge 1 */}
+      {/* Floating Badge 1 — Top-Left (Synced 60fps Motion) */}
       <motion.div
         animate={{ y: [-10, 10, -10] }}
         transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -92,7 +92,7 @@ function HeroVisual() {
         <span>HQ • Kerala</span>
       </motion.div>
 
-      {/* Floating Badge 2 */}
+      {/* Floating Badge 2 — Bottom-Right (Synced 60fps Motion) */}
       <motion.div
         animate={{ y: [10, -10, 10] }}
         transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -127,8 +127,9 @@ export default function Home() {
         description="Headquartered in Kerala, Kairos Global Solutions delivers high-performance enterprise consulting, adaptive technology frameworks, and human capital infrastructure."
       />
 
-      {/* ── Hero Main ── */}
+      {/* ── Hero ── */}
       <div className="grid md:grid-cols-2 gap-8 items-center" style={{ minHeight: '420px' }}>
+
         {/* Left */}
         <div>
           <motion.div {...fadeUp(0)}>

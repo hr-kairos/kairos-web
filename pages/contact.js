@@ -13,6 +13,24 @@ export default function Contact() {
   const [touched, setTouched] = useState({});
   const [errors, setErrors] = useState({});
 
+  // Lightweight Math CAPTCHA State
+  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0, answer: '' });
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState(false);
+
+  // Generate new math problem on mount
+  useEffect(() => {
+    generateCaptcha();
+  }, []);
+
+  const generateCaptcha = () => {
+    const n1 = Math.floor(Math.random() * 8) + 2; // 2-9
+    const n2 = Math.floor(Math.random() * 8) + 1; // 1-8
+    setCaptcha({ num1: n1, num2: n2, answer: (n1 + n2).toString() });
+    setCaptchaInput('');
+    setCaptchaError(false);
+  };
+
   // Process File
   const processFile = (file) => {
     if (!file) return;
@@ -105,41 +123,8 @@ export default function Contact() {
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
-  // State for Draft & Reference ID
-  const [referenceId, setReferenceId] = useState('');
-  const [formDraft, setFormDraft] = useState({
-    name: '',
-    email: '',
-    mobile: '',
-    position: '',
-    currentLocation: '',
-    preferredLocation: '',
-  });
-
-  // Restore draft from sessionStorage on mount
-  useEffect(() => {
-    try {
-      const saved = sessionStorage.getItem('kairos_contact_draft');
-      if (saved) {
-        setFormDraft(JSON.parse(saved));
-      }
-    } catch {
-      // Ignore storage error
-    }
-  }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormDraft((prev) => {
-      const updated = { ...prev, [name]: value };
-      try {
-        sessionStorage.setItem('kairos_contact_draft', JSON.stringify(updated));
-      } catch {
-        // Ignore storage error
-      }
-      return updated;
-    });
-
     if (touched[name]) {
       const error = validateField(name, value);
       setErrors((prev) => ({ ...prev, [name]: error }));
@@ -149,18 +134,22 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Verify Math CAPTCHA
+    if (captchaInput.trim() !== captcha.answer) {
+      setCaptchaError(true);
+      return;
+    }
+    setCaptchaError(false);
+
     setStatus('sending');
 
-    const refCode = `KGS-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-
     const formData = {
-      name: formDraft.name || e.target.name.value,
-      email: formDraft.email || e.target.email.value,
-      mobile: formDraft.mobile || e.target.mobile.value,
-      position: formDraft.position || e.target.position.value,
-      currentLocation: formDraft.currentLocation || e.target.currentLocation.value,
-      preferredLocation: formDraft.preferredLocation || e.target.preferredLocation.value,
-      referenceId: refCode,
+      name: e.target.name.value,
+      email: e.target.email.value,
+      mobile: e.target.mobile.value,
+      position: e.target.position.value,
+      currentLocation: e.target.currentLocation.value,
+      preferredLocation: e.target.preferredLocation.value,
       resume: resume.data ? resume : null,
       _honeypot: e.target._honeypot?.value || '',
     };
@@ -175,20 +164,16 @@ export default function Contact() {
       });
 
       if (response.ok) {
-        setReferenceId(refCode);
         setStatus('success');
         setShowToast(true);
         setShowSpotlight(true);
-        trackEvent('contact_form_submission_success', { position: formData.position, referenceId: refCode });
+        trackEvent('contact_form_submission_success', { position: formData.position });
         e.target.reset();
-        setFormDraft({ name: '', email: '', mobile: '', position: '', currentLocation: '', preferredLocation: '' });
-        try {
-          sessionStorage.removeItem('kairos_contact_draft');
-        } catch {}
         setResume({ data: '', name: '', type: '', size: '' });
         setTouched({});
         setErrors({});
-        setTimeout(() => setShowToast(false), 8000);
+        generateCaptcha();
+        setTimeout(() => setShowToast(false), 5000);
       } else {
         setStatus('error');
         trackEvent('contact_form_submission_failed', { position: formData.position, status: response.status });
@@ -257,10 +242,8 @@ export default function Contact() {
               <i className="fas fa-check" style={{ color: '#10b981', fontSize: '0.85rem' }} />
             </div>
             <div>
-              <h4 style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>Message Received</h4>
-              <p style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                Ref Tracking ID: <span style={{ fontWeight: 800, color: '#0891b2' }}>{referenceId || 'KGS-2026-REG'}</span> — 24h SLA active.
-              </p>
+              <h4 style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700, color: '#0F0F0F' }}>Message Received</h4>
+              <p style={{ margin: 0, fontSize: '0.78rem', color: '#6B7280' }}>Our executive team will respond within 24 hours.</p>
             </div>
             <button
               onClick={() => setShowToast(false)}
@@ -742,6 +725,58 @@ export default function Contact() {
                   <i className="fas fa-trash-alt" style={{ fontSize: '0.75rem' }} />
                 </button>
               </div>
+            )}
+          </div>
+
+          {/* Simple Math CAPTCHA Security Verification */}
+          <div
+            style={{
+              background: 'var(--input-bg)',
+              border: captchaError ? '1px solid #ef4444' : '1px solid var(--border-color)',
+              borderRadius: '0.85rem',
+              padding: '0.85rem 1rem',
+              marginTop: '0.2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <label htmlFor="captchaInput" style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <i className="fas fa-shield-alt" style={{ color: '#0891b2' }} />
+                Security Verification: What is <span style={{ color: '#0891b2', fontWeight: 800 }}>{captcha.num1} + {captcha.num2}</span>?
+              </label>
+              <button
+                type="button"
+                onClick={generateCaptcha}
+                title="New problem"
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem' }}
+              >
+                <i className="fas fa-sync-alt" />
+              </button>
+            </div>
+            <input
+              id="captchaInput"
+              type="text"
+              name="captcha"
+              value={captchaInput}
+              onChange={(e) => {
+                setCaptchaInput(e.target.value);
+                setCaptchaError(false);
+              }}
+              placeholder="Enter answer"
+              required
+              className="glass-input"
+              style={{
+                padding: '0.55rem 0.85rem',
+                fontSize: '0.85rem',
+                borderColor: captchaError ? '#ef4444' : undefined,
+              }}
+            />
+            {captchaError && (
+              <span style={{ fontSize: '0.72rem', color: '#ef4444', fontWeight: 600 }}>
+                Incorrect math answer. Please try again.
+              </span>
             )}
           </div>
 
