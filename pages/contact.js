@@ -123,8 +123,41 @@ export default function Contact() {
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
+  // State for Draft & Reference ID
+  const [referenceId, setReferenceId] = useState('');
+  const [formDraft, setFormDraft] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    position: '',
+    currentLocation: '',
+    preferredLocation: '',
+  });
+
+  // Restore draft from sessionStorage on mount
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem('kairos_contact_draft');
+      if (saved) {
+        setFormDraft(JSON.parse(saved));
+      }
+    } catch {
+      // Ignore storage error
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setFormDraft((prev) => {
+      const updated = { ...prev, [name]: value };
+      try {
+        sessionStorage.setItem('kairos_contact_draft', JSON.stringify(updated));
+      } catch {
+        // Ignore storage error
+      }
+      return updated;
+    });
+
     if (touched[name]) {
       const error = validateField(name, value);
       setErrors((prev) => ({ ...prev, [name]: error }));
@@ -143,13 +176,16 @@ export default function Contact() {
 
     setStatus('sending');
 
+    const refCode = `KGS-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
     const formData = {
-      name: e.target.name.value,
-      email: e.target.email.value,
-      mobile: e.target.mobile.value,
-      position: e.target.position.value,
-      currentLocation: e.target.currentLocation.value,
-      preferredLocation: e.target.preferredLocation.value,
+      name: formDraft.name || e.target.name.value,
+      email: formDraft.email || e.target.email.value,
+      mobile: formDraft.mobile || e.target.mobile.value,
+      position: formDraft.position || e.target.position.value,
+      currentLocation: formDraft.currentLocation || e.target.currentLocation.value,
+      preferredLocation: formDraft.preferredLocation || e.target.preferredLocation.value,
+      referenceId: refCode,
       resume: resume.data ? resume : null,
       _honeypot: e.target._honeypot?.value || '',
     };
@@ -164,16 +200,21 @@ export default function Contact() {
       });
 
       if (response.ok) {
+        setReferenceId(refCode);
         setStatus('success');
         setShowToast(true);
         setShowSpotlight(true);
-        trackEvent('contact_form_submission_success', { position: formData.position });
+        trackEvent('contact_form_submission_success', { position: formData.position, referenceId: refCode });
         e.target.reset();
+        setFormDraft({ name: '', email: '', mobile: '', position: '', currentLocation: '', preferredLocation: '' });
+        try {
+          sessionStorage.removeItem('kairos_contact_draft');
+        } catch {}
         setResume({ data: '', name: '', type: '', size: '' });
         setTouched({});
         setErrors({});
         generateCaptcha();
-        setTimeout(() => setShowToast(false), 5000);
+        setTimeout(() => setShowToast(false), 8000);
       } else {
         setStatus('error');
         trackEvent('contact_form_submission_failed', { position: formData.position, status: response.status });
@@ -242,8 +283,10 @@ export default function Contact() {
               <i className="fas fa-check" style={{ color: '#10b981', fontSize: '0.85rem' }} />
             </div>
             <div>
-              <h4 style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700, color: '#0F0F0F' }}>Message Received</h4>
-              <p style={{ margin: 0, fontSize: '0.78rem', color: '#6B7280' }}>Our executive team will respond within 24 hours.</p>
+              <h4 style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>Message Received</h4>
+              <p style={{ margin: '2px 0 0 0', fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                Ref Tracking ID: <span style={{ fontWeight: 800, color: '#0891b2' }}>{referenceId || 'KGS-2026-REG'}</span> — 24h SLA active.
+              </p>
             </div>
             <button
               onClick={() => setShowToast(false)}

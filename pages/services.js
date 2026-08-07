@@ -76,8 +76,16 @@ const services = [
   },
 ];
 
+const deploymentSteps = [
+  { step: '01', title: 'Discovery & Diagnostics', desc: 'Scope audit and operational goal mapping.' },
+  { step: '02', title: 'Custom Architecture', desc: 'Sourcing strategy & compliance blueprinting.' },
+  { step: '03', title: 'Rapid Execution', desc: '24h SLA response & deployment rollout.' },
+  { step: '04', title: 'Ongoing Governance', desc: 'Continuous performance tracking & reporting.' },
+];
+
 export default function Services() {
   const [selectedSvc, setSelectedSvc] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (selectedSvc) {
@@ -90,6 +98,15 @@ export default function Services() {
     };
   }, [selectedSvc]);
 
+  const filteredServices = services.filter((svc) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      svc.title.toLowerCase().includes(term) ||
+      svc.desc.toLowerCase().includes(term) ||
+      svc.details.some((d) => d.toLowerCase().includes(term))
+    );
+  });
+
   return (
     <div className="w-full max-w-6xl mx-auto px-6" style={{ paddingTop: '110px', paddingBottom: '80px' }}>
       <MetaHead
@@ -98,7 +115,7 @@ export default function Services() {
       />
 
       {/* Header */}
-      <div style={{ marginBottom: '4rem' }}>
+      <div style={{ marginBottom: '3rem' }}>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -109,125 +126,194 @@ export default function Services() {
             <i className="fas fa-cogs" style={{ fontSize: '0.65rem' }} /> What We Do
           </span>
         </motion.div>
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.08 }}
-          style={{
-            fontSize: 'clamp(2.2rem, 5vw, 3.75rem)',
-            fontWeight: 900, color: 'var(--text-primary)',
-            letterSpacing: '-0.035em', lineHeight: 1.08,
-            marginBottom: '1rem', maxWidth: '600px',
-          }}
-        >
-          Service <span className="text-gradient">Capabilities</span>
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.16 }}
-          style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.65, maxWidth: '520px' }}
-        >
-          Targeted operational configurations designed to balance and scale enterprise workflows. Click any card to explore full scope.
-        </motion.p>
-      </div>
-
-      {/* Grid of elegant square cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {services.map((svc, i) => {
-          return (
-            <motion.div
-              key={svc.num}
-              onClick={() => setSelectedSvc(svc)}
-              className="card flex flex-col justify-between cursor-pointer"
+        
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.08 }}
               style={{
-                padding: '2.25rem',
-                minHeight: '270px',
-                position: 'relative',
-                overflow: 'hidden',
+                fontSize: 'clamp(2.2rem, 5vw, 3.75rem)',
+                fontWeight: 900, color: 'var(--text-primary)',
+                letterSpacing: '-0.035em', lineHeight: 1.08,
+                marginBottom: '1rem', maxWidth: '600px',
               }}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.55, delay: i * 0.08, ease: [0.4, 0, 0.2, 1] }}
             >
-              <div>
-                {/* Header Row: Icon + Glass Index Tag */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '1.5rem' }}>
-                  <div
-                    style={{
-                      width: '50px', height: '50px',
-                      background: svc.bg,
-                      border: `1px solid ${svc.color}22`,
-                      borderRadius: '16px',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}
-                  >
-                    <i className={`fas ${svc.icon}`} style={{ color: svc.color, fontSize: '1.2rem' }} />
-                  </div>
+              Service <span className="text-gradient">Capabilities</span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.16 }}
+              style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.65, maxWidth: '520px' }}
+            >
+              Targeted operational configurations designed to balance and scale enterprise workflows. Click any card to explore full scope.
+            </motion.p>
+          </div>
 
-                  <span
-                    style={{
-                      fontSize: '0.8rem',
-                      fontWeight: 800,
-                      color: svc.color,
-                      background: svc.bg,
-                      border: `1px solid ${svc.color}33`,
-                      padding: '0.3rem 0.75rem',
-                      borderRadius: '9999px',
-                      letterSpacing: '0.05em',
-                      fontFamily: 'Inter, sans-serif',
-                    }}
-                  >
-                    {svc.num}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h3
+          {/* Instant Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            style={{ width: '100%', maxWidth: '320px' }}
+          >
+            <div style={{ position: 'relative' }}>
+              <i
+                className="fas fa-search"
+                style={{
+                  position: 'absolute',
+                  left: '1rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-muted)',
+                  fontSize: '0.85rem',
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Search capabilities..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.65rem 1rem 0.65rem 2.6rem',
+                  fontSize: '0.85rem',
+                  borderRadius: '9999px',
+                  border: '1px solid var(--border-color)',
+                  background: 'var(--input-bg)',
+                  color: 'var(--text-primary)',
+                  outline: 'none',
+                  transition: 'all 0.2s ease',
+                }}
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
                   style={{
-                    fontSize: '1.25rem',
-                    fontWeight: 800,
-                    color: 'var(--text-primary)',
-                    marginBottom: '0.75rem',
-                    letterSpacing: '-0.02em',
-                    lineHeight: 1.25,
+                    position: 'absolute',
+                    right: '1rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
                   }}
                 >
-                  {svc.title}
-                </h3>
-
-                {/* Description */}
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.65, margin: 0 }}>
-                  {svc.desc}
-                </p>
-              </div>
-            </motion.div>
-          );
-        })}
+                  <i className="fas fa-times" />
+                </button>
+              )}
+            </div>
+          </motion.div>
+        </div>
       </div>
 
-      {/* ── VisionOS Glass Detail Modal ── */}
+      {/* Grid of cards */}
+      {filteredServices.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredServices.map((svc, i) => {
+            return (
+              <motion.div
+                key={svc.num}
+                onClick={() => setSelectedSvc(svc)}
+                className="card flex flex-col justify-between cursor-pointer"
+                style={{
+                  padding: '2.25rem',
+                  minHeight: '270px',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.55, delay: i * 0.08, ease: [0.4, 0, 0.2, 1] }}
+              >
+                <div>
+                  {/* Header Row */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '1.5rem' }}>
+                    <div
+                      style={{
+                        width: '50px', height: '50px',
+                        background: svc.bg,
+                        border: `1px solid ${svc.color}22`,
+                        borderRadius: '16px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}
+                    >
+                      <i className={`fas ${svc.icon}`} style={{ color: svc.color, fontSize: '1.2rem' }} />
+                    </div>
+
+                    <span
+                      style={{
+                        fontSize: '0.8rem',
+                        fontWeight: 800,
+                        color: svc.color,
+                        background: svc.bg,
+                        border: `1px solid ${svc.color}33`,
+                        padding: '0.3rem 0.75rem',
+                        borderRadius: '9999px',
+                        letterSpacing: '0.05em',
+                        fontFamily: 'Inter, sans-serif',
+                      }}
+                    >
+                      {svc.num}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h3
+                    style={{
+                      fontSize: '1.25rem',
+                      fontWeight: 800,
+                      color: 'var(--text-primary)',
+                      marginBottom: '0.75rem',
+                      letterSpacing: '-0.02em',
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {svc.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.65, margin: 0 }}>
+                    {svc.desc}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      ) : (
+        <div style={{ textAlign: 'center', padding: '4rem 1rem', color: 'var(--text-muted)' }}>
+          <i className="fas fa-search" style={{ fontSize: '2rem', marginBottom: '1rem', opacity: 0.5 }} />
+          <p style={{ fontSize: '1.05rem', fontWeight: 600 }}>No capabilities found matching &quot;{searchTerm}&quot;</p>
+        </div>
+      )}
+
+      {/* Detail Modal */}
       <AnimatePresence>
         {selectedSvc && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedSvc(null)}
+          <div
             style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 100,
-              background: 'rgba(0, 0, 0, 0.4)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              position: 'fixed', inset: 0, zIndex: 1000,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
               padding: '1.5rem',
             }}
           >
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedSvc(null)}
+              style={{
+                position: 'absolute', inset: 0,
+                background: 'rgba(15, 15, 15, 0.65)',
+                backdropFilter: 'blur(10px)',
+              }}
+            />
+
             <motion.div
               initial={{ scale: 0.92, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -236,8 +322,10 @@ export default function Services() {
               className="modal-card"
               style={{
                 width: '100%',
-                maxWidth: '560px',
+                maxWidth: '620px',
                 position: 'relative',
+                maxHeight: '90vh',
+                overflowY: 'auto',
               }}
             >
               {/* Close Button */}
@@ -301,18 +389,41 @@ export default function Services() {
                 </div>
               </div>
 
+              {/* 4-Step Deployment Flowchart */}
+              <div style={{ marginBottom: '2rem', padding: '1.25rem', background: 'var(--input-bg)', border: '1px solid var(--border-color)', borderRadius: '1rem' }}>
+                <h4 style={{ fontSize: '0.78rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
+                  ⚡ 4-Step Deployment Protocol
+                </h4>
+                <div className="grid grid-cols-2 gap-3">
+                  {deploymentSteps.map((s) => (
+                    <div key={s.step} style={{ padding: '0.65rem 0.85rem', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '0.75rem' }}>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#0891b2' }}>{s.step}</span>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)' }}>{s.title}</p>
+                      <p style={{ margin: '2px 0 0 0', fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: 1.3 }}>{s.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Action Buttons */}
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                 <Link
                   href="/contact"
                   className="btn-primary"
-                  style={{ flex: 1, justifyContent: 'center', padding: '0.75rem 1.25rem', fontSize: '0.88rem' }}
+                  style={{ flex: 1, textAlign: 'center', justifyContent: 'center', padding: '0.75rem 1.25rem', fontSize: '0.88rem' }}
                 >
-                  Inquire About {selectedSvc.title} →
+                  Initiate {selectedSvc.title} Inquiry →
                 </Link>
+                <button
+                  onClick={() => setSelectedSvc(null)}
+                  className="btn-outline"
+                  style={{ padding: '0.75rem 1.25rem', fontSize: '0.88rem' }}
+                >
+                  Close
+                </button>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
