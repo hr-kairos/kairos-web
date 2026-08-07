@@ -12,6 +12,12 @@ html {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
   overflow-y: scroll;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark {
+  background-color: #0B0F17;
+  color: #F8FAFC;
 }
 
 body {
@@ -22,6 +28,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   position: relative;
+  transition: color 0.3s ease;
+}
+
+.dark body {
+  color: #F8FAFC;
 }
 
 /* Subtle blueprint/grid texture for authentic structure */
@@ -35,6 +46,12 @@ body::before {
   background-image: 
     linear-gradient(to right, rgba(8, 145, 178, 0.022) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(8, 145, 178, 0.022) 1px, transparent 1px);
+}
+
+.dark body::before {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 /* Subtle grain texture for premium paper feel */
@@ -58,6 +75,14 @@ body::after {
   background-clip: text;
 }
 
+.dark .text-gradient {
+  background: linear-gradient(135deg, #22d3ee 0%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Glass Cards & Panels ────────────────────────────────── */
 .card,
 .glass-panel {
   background: rgba(255, 255, 255, 0.78);
@@ -72,6 +97,16 @@ body::after {
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.dark .card,
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    0 12px 32px -4px rgba(8, 145, 178, 0.12);
+  color: #F8FAFC;
+}
+
 .card:hover,
 .glass-panel:hover {
   background: rgba(255, 255, 255, 0.92);
@@ -83,17 +118,36 @@ body::after {
     0 28px 64px -12px rgba(0, 0, 0, 0.08);
 }
 
+.dark .card:hover,
+.dark .glass-panel:hover {
+  background: rgba(30, 41, 59, 0.92);
+  border-color: rgba(34, 211, 238, 0.35);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 16px 40px -4px rgba(8, 145, 178, 0.25);
+}
+
 /* ─── Form Inputs ────────────────────────────────────────── */
 .glass-input {
   background: #F5F3F0;
   border: 1.5px solid rgba(0, 0, 0, 0.10);
   color: #0F0F0F;
   border-radius: 0.75rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.dark .glass-input {
+  background: #1E293B;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  color: #F8FAFC;
 }
 
 .glass-input::placeholder {
   color: #9CA3AF;
+}
+
+.dark .glass-input::placeholder {
+  color: #64748B;
 }
 
 .glass-input:focus {
@@ -101,6 +155,12 @@ body::after {
   border-color: #0891b2;
   box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.13);
   outline: none;
+}
+
+.dark .glass-input:focus {
+  background: #0F172A;
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.2);
 }
 
 /* ─── Badge Chip ─────────────────────────────────────────── */
@@ -117,6 +177,12 @@ body::after {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #0891b2;
+}
+
+.dark .badge {
+  background: rgba(8, 145, 178, 0.18);
+  border-color: rgba(34, 211, 238, 0.3);
+  color: #22d3ee;
 }
 
 /* ─── Primary Button ─────────────────────────────────────── */
@@ -138,11 +204,21 @@ body::after {
   text-decoration: none;
 }
 
+.dark .btn-primary {
+  background: #0891b2;
+  color: #FFFFFF;
+}
+
 .btn-primary:hover {
   background: #0891b2;
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(8, 145, 178, 0.35);
   color: #FFFFFF;
+}
+
+.dark .btn-primary:hover {
+  background: #06b6d4;
+  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.4);
 }
 
 /* ─── Outline Button ─────────────────────────────────────── */
@@ -162,10 +238,29 @@ body::after {
   text-decoration: none;
 }
 
+.dark .btn-outline {
+  color: #CBD5E1;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 .btn-outline:hover {
   border-color: #0891b2;
   color: #0891b2;
   transform: translateY(-2px);
+}
+
+.dark .btn-outline:hover {
+  border-color: #22d3ee;
+  color: #22d3ee;
+}
+
+/* Dark Mode Typography Overrides */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #F8FAFC !important;
+}
+
+.dark p, .dark label, .dark span {
+  color: #CBD5E1;
 }
 
 /* ─── Layout Guard ───────────────────────────────────────── */

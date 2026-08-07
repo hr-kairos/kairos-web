@@ -6,8 +6,21 @@ export default function Background() {
       className="fixed inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none"
       aria-hidden="true"
     >
-      {/* Warm off-white base */}
-      <div className="absolute inset-0" style={{ background: '#F9F7F4' }} />
+      {/* Base background that adapts in Dark Mode */}
+      <div
+        className="absolute inset-0 transition-colors duration-500"
+        style={{
+          backgroundColor: 'var(--bg-base, #F9F7F4)',
+        }}
+      />
+      <style jsx global>{`
+        :root {
+          --bg-base: #F9F7F4;
+        }
+        html.dark {
+          --bg-base: #0B0F17;
+        }
+      `}</style>
 
       {/* Floating Glass Orb 1 — Cyan, Top-Left */}
       <motion.div
@@ -23,7 +36,7 @@ export default function Background() {
           left: '-10%',
           width: '55vw',
           height: '55vw',
-          background: 'radial-gradient(circle, rgba(8,145,178,0.18) 0%, rgba(8,145,178,0.04) 50%, transparent 75%)',
+          background: 'radial-gradient(circle, rgba(8,145,178,0.22) 0%, rgba(8,145,178,0.05) 50%, transparent 75%)',
           filter: 'blur(90px)',
           borderRadius: '50%',
         }}
@@ -43,7 +56,7 @@ export default function Background() {
           right: '-12%',
           width: '60vw',
           height: '60vw',
-          background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.03) 50%, transparent 75%)',
+          background: 'radial-gradient(circle, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0.04) 50%, transparent 75%)',
           filter: 'blur(100px)',
           borderRadius: '50%',
         }}
@@ -62,12 +75,11 @@ export default function Background() {
           left: '35%',
           width: '35vw',
           height: '35vw',
-          background: 'radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 70%)',
           filter: 'blur(80px)',
           borderRadius: '50%',
         }}
       />
-
     </div>
   );
 }
