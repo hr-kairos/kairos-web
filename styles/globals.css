@@ -17,6 +17,10 @@
   --badge-bg: rgba(8, 145, 178, 0.08);
   --badge-border: rgba(8, 145, 178, 0.18);
   --badge-text: #0891b2;
+  --nav-bg: rgba(249, 247, 244, 0.85);
+  --nav-bg-scrolled: rgba(249, 247, 244, 0.94);
+  --nav-pill-bg: rgba(0, 0, 0, 0.04);
+  --nav-pill-border: rgba(0, 0, 0, 0.065);
 }
 
 html.dark {
@@ -31,6 +35,10 @@ html.dark {
   --badge-bg: rgba(8, 145, 178, 0.18);
   --badge-border: rgba(34, 211, 238, 0.3);
   --badge-text: #22d3ee;
+  --nav-bg: rgba(11, 15, 23, 0.85);
+  --nav-bg-scrolled: rgba(11, 15, 23, 0.94);
+  --nav-pill-bg: rgba(255, 255, 255, 0.05);
+  --nav-pill-border: rgba(255, 255, 255, 0.08);
 }
 
 /* ─── Base ───────────────────────────────────────────────── */

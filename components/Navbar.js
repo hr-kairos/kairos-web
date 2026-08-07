@@ -38,12 +38,10 @@ export default function Navbar() {
     <nav
       className="fixed w-full top-0 z-50 transition-all duration-300"
       style={{
-        background: scrolled
-          ? theme === 'dark' ? 'rgba(11, 15, 23, 0.94)' : 'rgba(249, 247, 244, 0.94)'
-          : theme === 'dark' ? 'rgba(11, 15, 23, 0.8)' : 'rgba(249, 247, 244, 0.8)',
+        background: scrolled ? 'var(--nav-bg-scrolled)' : 'var(--nav-bg)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.07)',
+        borderBottom: '1px solid var(--border-color)',
         boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.06)' : 'none',
       }}
     >
@@ -73,8 +71,8 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-6">
           <div
             style={{
-              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
-              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.065)',
+              background: 'var(--nav-pill-bg)',
+              border: '1px solid var(--nav-pill-border)',
               borderRadius: '9999px',
               padding: '0.35rem 0.45rem',
               display: 'flex',
@@ -91,8 +89,8 @@ export default function Navbar() {
                   style={{
                     fontSize: '0.92rem',
                     fontWeight: active ? 700 : 500,
-                    color: active ? '#0891b2' : theme === 'dark' ? '#CBD5E1' : '#4B5563',
-                    background: active ? (theme === 'dark' ? '#1E293B' : '#FFFFFF') : 'transparent',
+                    color: active ? '#0891b2' : 'var(--text-secondary)',
+                    background: active ? 'var(--card-bg)' : 'transparent',
                     border: active ? '1px solid rgba(8, 145, 178, 0.25)' : '1px solid transparent',
                     boxShadow: active ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
                     borderRadius: '9999px',
@@ -103,13 +101,13 @@ export default function Navbar() {
                   }}
                   onMouseEnter={(e) => {
                     if (!active) {
-                      e.currentTarget.style.color = theme === 'dark' ? '#FFFFFF' : '#0F0F0F';
-                      e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.7)';
+                      e.currentTarget.style.color = 'var(--text-primary)';
+                      e.currentTarget.style.background = 'var(--nav-pill-bg)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!active) {
-                      e.currentTarget.style.color = theme === 'dark' ? '#CBD5E1' : '#4B5563';
+                      e.currentTarget.style.color = 'var(--text-secondary)';
                       e.currentTarget.style.background = 'transparent';
                     }
                   }}
@@ -140,8 +138,8 @@ export default function Navbar() {
       {isOpen && (
         <div
           style={{
-            background: theme === 'dark' ? 'rgba(15, 23, 42, 0.98)' : 'rgba(249, 247, 244, 0.98)',
-            borderTop: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.06)',
+            background: 'var(--modal-bg)',
+            borderTop: '1px solid var(--border-color)',
             backdropFilter: 'blur(20px)',
           }}
         >

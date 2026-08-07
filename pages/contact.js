@@ -599,7 +599,7 @@ export default function Contact() {
 
           {/* Drag & Drop Resume Upload Box */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.3rem' }}>
-            <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
               Upload Resume (PDF, DOC, DOCX — Max 4MB)
             </label>
 
@@ -609,8 +609,8 @@ export default function Contact() {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 style={{
-                  border: isDragging ? '2px dashed #0891b2' : '2px dashed #D1D5DB',
-                  background: isDragging ? 'rgba(8, 145, 178, 0.06)' : 'rgba(249, 250, 251, 0.7)',
+                  border: isDragging ? '2px dashed #0891b2' : '2px dashed var(--border-color)',
+                  background: isDragging ? 'rgba(8, 145, 178, 0.12)' : 'var(--input-bg)',
                   borderRadius: '1rem',
                   padding: '1.4rem 1rem',
                   textAlign: 'center',
