@@ -76,13 +76,6 @@ const services = [
   },
 ];
 
-const deploymentSteps = [
-  { step: '01', title: 'Discovery & Diagnostics', desc: 'Scope audit and operational goal mapping.' },
-  { step: '02', title: 'Custom Architecture', desc: 'Sourcing strategy & compliance blueprinting.' },
-  { step: '03', title: 'Rapid Execution', desc: '24h SLA response & deployment rollout.' },
-  { step: '04', title: 'Ongoing Governance', desc: 'Continuous performance tracking & reporting.' },
-];
-
 export default function Services() {
   const [selectedSvc, setSelectedSvc] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -384,22 +377,6 @@ export default function Services() {
                     <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 500 }}>
                       <i className="fas fa-check-circle" style={{ color: selectedSvc.color, fontSize: '0.85rem' }} />
                       <span>{point}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 4-Step Deployment Flowchart */}
-              <div style={{ marginBottom: '2rem', padding: '1.25rem', background: 'var(--input-bg)', border: '1px solid var(--border-color)', borderRadius: '1rem' }}>
-                <h4 style={{ fontSize: '0.78rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-primary)', marginBottom: '1rem' }}>
-                  ⚡ 4-Step Deployment Protocol
-                </h4>
-                <div className="grid grid-cols-2 gap-3">
-                  {deploymentSteps.map((s) => (
-                    <div key={s.step} style={{ padding: '0.65rem 0.85rem', background: 'var(--card-bg)', border: '1px solid var(--border-color)', borderRadius: '0.75rem' }}>
-                      <span style={{ fontSize: '0.7rem', fontWeight: 800, color: '#0891b2' }}>{s.step}</span>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)' }}>{s.title}</p>
-                      <p style={{ margin: '2px 0 0 0', fontSize: '0.72rem', color: 'var(--text-muted)', lineHeight: 1.3 }}>{s.desc}</p>
                     </div>
                   ))}
                 </div>

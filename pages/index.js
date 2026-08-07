@@ -121,14 +121,14 @@ const fadeUp = (delay = 0) => ({
 
 export default function Home() {
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 flex-grow flex flex-col justify-center" style={{ paddingTop: '110px', paddingBottom: '80px' }}>
+    <div className="w-full max-w-7xl mx-auto px-6 flex-grow flex flex-col justify-center" style={{ paddingTop: '120px', paddingBottom: '120px', minHeight: 'calc(100vh - 120px)' }}>
       <MetaHead
         title="Kairos Global Solutions | Enterprise Consulting & Human Capital"
         description="Headquartered in Kerala, Kairos Global Solutions delivers high-performance enterprise consulting, adaptive technology frameworks, and human capital infrastructure."
       />
 
       {/* ── Hero Main ── */}
-      <div className="grid md:grid-cols-2 gap-8 items-center" style={{ minHeight: '420px', marginBottom: '4rem' }}>
+      <div className="grid md:grid-cols-2 gap-8 items-center" style={{ minHeight: '420px' }}>
         {/* Left */}
         <div>
           <motion.div {...fadeUp(0)}>
@@ -184,152 +184,6 @@ export default function Home() {
           <HeroVisual />
         </motion.div>
       </div>
-
-      {/* ── Apple-Style Bento Grid ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.65, delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6"
-      >
-        {/* Bento Box 1: Large Key Metric */}
-        <div
-          className="card md:col-span-2 flex flex-col justify-between"
-          style={{
-            padding: '2.25rem',
-            background: 'var(--card-bg)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '1.75rem',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#0891b2', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              Global Capability Network
-            </span>
-            <span className="badge" style={{ fontSize: '0.7rem' }}>
-              <i className="fas fa-bolt" /> 24h SLA Response
-            </span>
-          </div>
-
-          <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.25, marginBottom: '1rem' }}>
-            16+ Tier-1 Strategic Alliances Across IT, Advisory & Enterprise Verticals
-          </h3>
-
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, maxWidth: '580px', margin: 0 }}>
-            Partnering directly with market leaders including TCS, Infosys, Wipro, IBM, Capgemini, and EY to deliver scalable cross-border talent and operations.
-          </p>
-
-          <div style={{ marginTop: '1.75rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Link href="/clients" className="btn-outline" style={{ fontSize: '0.82rem', padding: '0.5rem 1.1rem' }}>
-              Explore Alliances →
-            </Link>
-          </div>
-        </div>
-
-        {/* Bento Box 2: Regulatory & Governance Compliance */}
-        <div
-          className="card flex flex-col justify-between"
-          style={{
-            padding: '2.25rem',
-            background: 'var(--card-bg)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '1.75rem',
-          }}
-        >
-          <div>
-            <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'rgba(16, 185, 129, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
-              <i className="fas fa-shield-alt" style={{ color: '#10b981', fontSize: '1.25rem' }} />
-            </div>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.65rem' }}>
-              100% Governance Compliance
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
-              Full regulatory alignment across labor laws, corporate risk frameworks, and enterprise contract security.
-            </p>
-          </div>
-
-          <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem', color: '#10b981', fontWeight: 700 }}>
-            <i className="fas fa-check-circle" /> ISO & Statutory Standard Compliant
-          </div>
-        </div>
-
-        {/* Bento Box 3: 5 Core Capability Pillars */}
-        <div
-          className="card flex flex-col justify-between"
-          style={{
-            padding: '2.25rem',
-            background: 'var(--card-bg)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '1.75rem',
-          }}
-        >
-          <div>
-            <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'rgba(8, 145, 178, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem' }}>
-              <i className="fas fa-cubes" style={{ color: '#0891b2', fontSize: '1.25rem' }} />
-            </div>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.65rem' }}>
-              5 Integrated Scopes
-            </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', lineHeight: 1.6, margin: 0 }}>
-              Recruitment Logistics, Learning & Development, HR Systems, Business Consulting, and Legal Advisory.
-            </p>
-          </div>
-
-          <div style={{ marginTop: '1.5rem' }}>
-            <Link href="/services" style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0891b2', textDecoration: 'none' }}>
-              View Capability Scopes →
-            </Link>
-          </div>
-        </div>
-
-        {/* Bento Box 4: Strategic HQ & Pan-India Footprint */}
-        <div
-          className="card md:col-span-2 flex flex-col justify-between"
-          style={{
-            padding: '2.25rem',
-            background: 'var(--card-bg)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '1.75rem',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyBetween: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-            <div>
-              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#10b981', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                Operational Command
-              </span>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.35rem', marginBottom: '0.5rem' }}>
-                Headquartered in Kerala with Pan-India Strategic Reach
-              </h3>
-            </div>
-          </div>
-
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: 1.6, margin: 0 }}>
-            Positioned at the nexus of technology and talent innovation, Kairos coordinates multi-city executive search, specialized IT bootcamps, and corporate advisory.
-          </p>
-
-          <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-            {['HQ • Kerala', 'Hub • Cochin', 'Hub • Trivandrum', 'Hub • Calicut'].map((hub, idx) => (
-              <span
-                key={idx}
-                style={{
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: '9999px',
-                  background: 'var(--input-bg)',
-                  border: '1px solid var(--border-color)',
-                  color: 'var(--text-primary)',
-                }}
-              >
-                📍 {hub}
-              </span>
-            ))}
-          </div>
-        </div>
-      </motion.div>
     </div>
   );
 }
