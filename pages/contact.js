@@ -1,22 +1,57 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { trackEvent, reportError } from '../utils/telemetry';
 
 export default function Contact() {
   const [status, setStatus] = useState('');
   const [showToast, setShowToast] = useState(false);
-  const [resume, setResume] = useState({ data: '', name: '', type: '' });
+  const [resume, setResume] = useState({ data: '', name: '', type: '', size: '' });
+  const [isDragging, setIsDragging] = useState(false);
   const [showSpotlight, setShowSpotlight] = useState(false);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  // Inline Validation State
+  const [touched, setTouched] = useState({});
+  const [errors, setErrors] = useState({});
+
+  // Lightweight Math CAPTCHA State
+  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0, answer: '' });
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState(false);
+
+  // Generate new math problem on mount
+  useEffect(() => {
+    generateCaptcha();
+  }, []);
+
+  const generateCaptcha = () => {
+    const n1 = Math.floor(Math.random() * 8) + 2; // 2-9
+    const n2 = Math.floor(Math.random() * 8) + 1; // 1-8
+    setCaptcha({ num1: n1, num2: n2, answer: (n1 + n2).toString() });
+    setCaptchaInput('');
+    setCaptchaError(false);
+  };
+
+  // Process File
+  const processFile = (file) => {
     if (!file) return;
 
-    if (file.size > 4 * 1024 * 1024) {
-      alert("File size must be under 4MB to ensure secure transmission.");
-      e.target.value = null;
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      alert('Please upload a PDF, DOC, or DOCX document.');
       return;
     }
+
+    if (file.size > 4 * 1024 * 1024) {
+      alert('File size must be under 4MB to ensure secure transmission.');
+      return;
+    }
+
+    const fileSizeMb = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
 
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -25,13 +60,87 @@ export default function Contact() {
         data: base64Data,
         name: file.name,
         type: file.type,
+        size: fileSizeMb,
       });
     };
     reader.readAsDataURL(file);
   };
 
+  const handleFileChange = (e) => {
+    processFile(e.target.files[0]);
+  };
+
+  // Drag & Drop Handlers
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const removeResume = () => {
+    setResume({ data: '', name: '', type: '', size: '' });
+  };
+
+  // Validation Logic
+  const validateField = (name, value) => {
+    let error = '';
+    if (name === 'email') {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!value) error = 'Email is required';
+      else if (!emailRegex.test(value)) error = 'Enter a valid email address';
+    } else if (name === 'mobile') {
+      const phoneRegex = /^[+\d\s\-()]{7,20}$/;
+      if (!value) error = 'Mobile number is required';
+      else if (!phoneRegex.test(value)) error = 'Enter a valid phone number';
+    } else if (name === 'name') {
+      if (!value.trim()) error = 'Name is required';
+      else if (value.trim().length < 2) error = 'Name must be at least 2 characters';
+    } else if (['position', 'currentLocation', 'preferredLocation'].includes(name)) {
+      if (!value.trim()) error = 'This field is required';
+    }
+    return error;
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const error = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (touched[name]) {
+      const error = validateField(name, value);
+      setErrors((prev) => ({ ...prev, [name]: error }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Verify Math CAPTCHA
+    if (captchaInput.trim() !== captcha.answer) {
+      setCaptchaError(true);
+      return;
+    }
+    setCaptchaError(false);
+
     setStatus('sending');
 
     const formData = {
@@ -57,10 +166,13 @@ export default function Contact() {
       if (response.ok) {
         setStatus('success');
         setShowToast(true);
-        setShowSpotlight(true); // Launch premium LinkedIn spotlight tutorial
+        setShowSpotlight(true);
         trackEvent('contact_form_submission_success', { position: formData.position });
         e.target.reset();
-        setResume({ data: '', name: '', type: '' });
+        setResume({ data: '', name: '', type: '', size: '' });
+        setTouched({});
+        setErrors({});
+        generateCaptcha();
         setTimeout(() => setShowToast(false), 5000);
       } else {
         setStatus('error');
@@ -216,7 +328,7 @@ export default function Contact() {
           ))}
         </div>
 
-        {/* Simple inline LinkedIn link - Highlighted Spotlight target */}
+        {/* LinkedIn Spotlight link */}
         <div style={{ position: 'relative', display: 'inline-block' }}>
           {showSpotlight && (
             <motion.div
@@ -237,7 +349,6 @@ export default function Contact() {
                 zIndex: 1020,
               }}
             >
-              {/* Arrow */}
               <div
                 style={{
                   position: 'absolute',
@@ -254,7 +365,7 @@ export default function Contact() {
                 <span>✨</span> Stay Connected
               </h4>
               <p style={{ margin: '0 0 12px 0', fontSize: '0.8rem', color: '#4B5563', lineHeight: 1.5 }}>
-                Follow us on LinkedIn for exciting candidate placement announcements, consulting advisory insights, and brand metrics!
+                Follow us on LinkedIn for placement announcements, consulting advisory insights, and brand metrics!
               </p>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <a
@@ -294,7 +405,7 @@ export default function Contact() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem',
-              color: showSpotlight ? '#0A66C2' : '#0A66C2',
+              color: '#0A66C2',
               fontWeight: 700,
               fontSize: '0.9rem',
               textDecoration: 'none',
@@ -326,8 +437,8 @@ export default function Contact() {
           Submit Your Inquiry
         </h2>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Honeypot anti-bot field — invisible to real users, bots auto-fill it */}
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+          {/* Honeypot anti-bot field */}
           <input
             type="text"
             name="_honeypot"
@@ -336,79 +447,351 @@ export default function Contact() {
             aria-hidden="true"
             style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
           />
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            required
-            className="glass-input"
-            style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            required
-            className="glass-input"
-            style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
-          />
-          <input
-            type="tel"
-            name="mobile"
-            placeholder="Mobile Number"
-            required
-            className="glass-input"
-            style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
-          />
-          <input
-            type="text"
-            name="position"
-            placeholder="Position Applying For"
-            required
-            className="glass-input"
-            style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
-          />
-          <div className="grid grid-cols-2 gap-4">
+
+          {/* Full Name */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            <label htmlFor="name" style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+              Full Name <span style={{ color: '#ef4444' }}>*</span>
+            </label>
+            <div style={{ position: 'relative' }}>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="e.g. Sarah Jenkins"
+                required
+                onBlur={handleBlur}
+                onChange={handleChange}
+                className="glass-input"
+                style={{
+                  width: '100%',
+                  padding: '0.85rem 2.2rem 0.85rem 1rem',
+                  fontSize: '0.875rem',
+                  boxSizing: 'border-box',
+                  borderColor: errors.name ? '#ef4444' : touched.name && !errors.name ? '#10b981' : undefined,
+                }}
+              />
+              {touched.name && (
+                <i
+                  className={`fas ${errors.name ? 'fa-exclamation-circle' : 'fa-check-circle'}`}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: errors.name ? '#ef4444' : '#10b981',
+                    fontSize: '0.85rem',
+                  }}
+                />
+              )}
+            </div>
+            {errors.name && <span style={{ fontSize: '0.72rem', color: '#ef4444', fontWeight: 600 }}>{errors.name}</span>}
+          </div>
+
+          {/* Email Address */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            <label htmlFor="email" style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+              Email Address <span style={{ color: '#ef4444' }}>*</span>
+            </label>
+            <div style={{ position: 'relative' }}>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                placeholder="e.g. sarah@example.com"
+                required
+                onBlur={handleBlur}
+                onChange={handleChange}
+                className="glass-input"
+                style={{
+                  width: '100%',
+                  padding: '0.85rem 2.2rem 0.85rem 1rem',
+                  fontSize: '0.875rem',
+                  boxSizing: 'border-box',
+                  borderColor: errors.email ? '#ef4444' : touched.email && !errors.email ? '#10b981' : undefined,
+                }}
+              />
+              {touched.email && (
+                <i
+                  className={`fas ${errors.email ? 'fa-exclamation-circle' : 'fa-check-circle'}`}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: errors.email ? '#ef4444' : '#10b981',
+                    fontSize: '0.85rem',
+                  }}
+                />
+              )}
+            </div>
+            {errors.email && <span style={{ fontSize: '0.72rem', color: '#ef4444', fontWeight: 600 }}>{errors.email}</span>}
+          </div>
+
+          {/* Mobile Number */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            <label htmlFor="mobile" style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+              Mobile Number <span style={{ color: '#ef4444' }}>*</span>
+            </label>
+            <div style={{ position: 'relative' }}>
+              <input
+                id="mobile"
+                type="tel"
+                name="mobile"
+                placeholder="e.g. +91 98765 43210"
+                required
+                onBlur={handleBlur}
+                onChange={handleChange}
+                className="glass-input"
+                style={{
+                  width: '100%',
+                  padding: '0.85rem 2.2rem 0.85rem 1rem',
+                  fontSize: '0.875rem',
+                  boxSizing: 'border-box',
+                  borderColor: errors.mobile ? '#ef4444' : touched.mobile && !errors.mobile ? '#10b981' : undefined,
+                }}
+              />
+              {touched.mobile && (
+                <i
+                  className={`fas ${errors.mobile ? 'fa-exclamation-circle' : 'fa-check-circle'}`}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: errors.mobile ? '#ef4444' : '#10b981',
+                    fontSize: '0.85rem',
+                  }}
+                />
+              )}
+            </div>
+            {errors.mobile && <span style={{ fontSize: '0.72rem', color: '#ef4444', fontWeight: 600 }}>{errors.mobile}</span>}
+          </div>
+
+          {/* Position Applying For */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            <label htmlFor="position" style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+              Position Applying For <span style={{ color: '#ef4444' }}>*</span>
+            </label>
             <input
+              id="position"
               type="text"
-              name="currentLocation"
-              placeholder="Current Location"
+              name="position"
+              placeholder="e.g. Senior Software Architect / HR Director"
               required
+              onBlur={handleBlur}
+              onChange={handleChange}
               className="glass-input"
-              style={{ padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
-            />
-            <input
-              type="text"
-              name="preferredLocation"
-              placeholder="Preferred Location"
-              required
-              className="glass-input"
-              style={{ padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
             />
           </div>
 
-          {/* Resume Upload Input */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.2rem' }}>
-            <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#4B5563' }}>Upload Resume (PDF/DOC, max 4MB)</label>
+          {/* Grid: Current & Preferred Locations */}
+          <div className="grid grid-cols-2 gap-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+              <label htmlFor="currentLocation" style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+                Current Location <span style={{ color: '#ef4444' }}>*</span>
+              </label>
+              <input
+                id="currentLocation"
+                type="text"
+                name="currentLocation"
+                placeholder="e.g. Chennai"
+                required
+                onBlur={handleBlur}
+                onChange={handleChange}
+                className="glass-input"
+                style={{ padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+              <label htmlFor="preferredLocation" style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+                Preferred Location <span style={{ color: '#ef4444' }}>*</span>
+              </label>
+              <input
+                id="preferredLocation"
+                type="text"
+                name="preferredLocation"
+                placeholder="e.g. Bangalore / Remote"
+                required
+                onBlur={handleBlur}
+                onChange={handleChange}
+                className="glass-input"
+                style={{ padding: '0.85rem 1rem', fontSize: '0.875rem', boxSizing: 'border-box' }}
+              />
+            </div>
+          </div>
+
+          {/* Drag & Drop Resume Upload Box */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.3rem' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151' }}>
+              Upload Resume (PDF, DOC, DOCX — Max 4MB)
+            </label>
+
+            {!resume.name ? (
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                style={{
+                  border: isDragging ? '2px dashed #0891b2' : '2px dashed #D1D5DB',
+                  background: isDragging ? 'rgba(8, 145, 178, 0.06)' : 'rgba(249, 250, 251, 0.7)',
+                  borderRadius: '1rem',
+                  padding: '1.4rem 1rem',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  position: 'relative',
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleFileChange}
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    opacity: 0,
+                    cursor: 'pointer',
+                  }}
+                />
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                  <div
+                    style={{
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      background: 'rgba(8, 145, 178, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <i className="fas fa-cloud-upload-alt" style={{ color: '#0891b2', fontSize: '1.2rem' }} />
+                  </div>
+                  <div>
+                    <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700, color: '#1F2937' }}>
+                      Drag & drop your resume here
+                    </p>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '0.75rem', color: '#6B7280' }}>
+                      or <span style={{ color: '#0891b2', textDecoration: 'underline' }}>browse file</span> from computer
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Selected File Card */
+              <div
+                style={{
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  background: 'rgba(16, 185, 129, 0.05)',
+                  borderRadius: '0.85rem',
+                  padding: '0.85rem 1.1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <i
+                    className={`fas ${resume.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file-word'}`}
+                    style={{ color: '#0891b2', fontSize: '1.3rem' }}
+                  />
+                  <div>
+                    <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 700, color: '#0F0F0F' }}>{resume.name}</p>
+                    <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 600 }}>✓ Attached ({resume.size})</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={removeResume}
+                  title="Remove file"
+                  style={{
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#ef4444',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <i className="fas fa-trash-alt" style={{ fontSize: '0.75rem' }} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Simple Math CAPTCHA Security Verification */}
+          <div
+            style={{
+              background: '#F9FAFB',
+              border: captchaError ? '1px solid #ef4444' : '1px solid #E5E7EB',
+              borderRadius: '0.85rem',
+              padding: '0.85rem 1rem',
+              marginTop: '0.2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <label htmlFor="captchaInput" style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <i className="fas fa-shield-alt" style={{ color: '#0891b2' }} />
+                Security Verification: What is <span style={{ color: '#0891b2', fontWeight: 800 }}>{captcha.num1} + {captcha.num2}</span>?
+              </label>
+              <button
+                type="button"
+                onClick={generateCaptcha}
+                title="New problem"
+                style={{ background: 'none', border: 'none', color: '#6B7280', cursor: 'pointer', fontSize: '0.75rem' }}
+              >
+                <i className="fas fa-sync-alt" />
+              </button>
+            </div>
             <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={handleFileChange}
+              id="captchaInput"
+              type="text"
+              name="captcha"
+              value={captchaInput}
+              onChange={(e) => {
+                setCaptchaInput(e.target.value);
+                setCaptchaError(false);
+              }}
+              placeholder="Enter answer"
+              required
               className="glass-input"
-              style={{ width: '100%', padding: '0.6rem 0.85rem', fontSize: '0.78rem', boxSizing: 'border-box' }}
+              style={{
+                padding: '0.55rem 0.85rem',
+                fontSize: '0.85rem',
+                borderColor: captchaError ? '#ef4444' : undefined,
+              }}
             />
-            {resume.name && (
-              <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 600 }}>
-                ✓ Selected: {resume.name}
+            {captchaError && (
+              <span style={{ fontSize: '0.72rem', color: '#ef4444', fontWeight: 600 }}>
+                Incorrect math answer. Please try again.
               </span>
             )}
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={status === 'sending'}
             className="btn-primary"
-            style={{ justifyContent: 'center', marginTop: '0.5rem', borderRadius: '0.85rem', padding: '0.95rem', opacity: status === 'sending' ? 0.7 : 1 }}
+            style={{
+              justifyContent: 'center',
+              marginTop: '0.5rem',
+              borderRadius: '0.85rem',
+              padding: '0.95rem',
+              opacity: status === 'sending' ? 0.7 : 1,
+            }}
           >
             {status === 'sending' ? (
               <span className="flex items-center gap-2">
