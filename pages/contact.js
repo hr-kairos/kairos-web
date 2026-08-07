@@ -265,7 +265,7 @@ export default function Contact() {
           style={{
             fontSize: 'clamp(2.4rem, 5vw, 3.75rem)',
             fontWeight: 900,
-            color: showSpotlight ? '#FFFFFF' : '#0F0F0F',
+            color: showSpotlight ? '#FFFFFF' : 'var(--text-primary)',
             letterSpacing: '-0.035em',
             lineHeight: 1.1,
             marginBottom: '1.5rem',
@@ -277,7 +277,7 @@ export default function Contact() {
 
         <p
           style={{
-            color: showSpotlight ? '#D1D5DB' : '#6B7280',
+            color: showSpotlight ? '#D1D5DB' : 'var(--text-secondary)',
             fontSize: '1.05rem',
             lineHeight: 1.7,
             marginBottom: '2.5rem',
@@ -433,7 +433,7 @@ export default function Contact() {
         className="card"
         style={{ padding: '2.5rem', opacity: showSpotlight ? 0.3 : 1, pointerEvents: showSpotlight ? 'none' : 'auto', transition: 'all 0.4s ease' }}
       >
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0F0F0F', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
           Submit Your Inquiry
         </h2>
 

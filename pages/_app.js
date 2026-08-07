@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Background from '../components/Background';
 import CookieBanner from '../components/CookieBanner';
+import ThemeToggle from '../components/ThemeToggle';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
@@ -50,6 +51,7 @@ export default function App({ Component, pageProps, router }) {
             <Analytics />
             <SpeedInsights />
             <CookieBanner />
+            <ThemeToggle />
             <AnimatePresence mode="wait">
               <motion.div
                 key={router.route}

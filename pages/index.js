@@ -146,7 +146,7 @@ export default function Home() {
               fontWeight: 900,
               lineHeight: 1.08,
               letterSpacing: '-0.035em',
-              color: '#0F0F0F',
+              color: 'var(--text-primary)',
               marginBottom: '1.4rem',
             }}
           >
@@ -159,7 +159,7 @@ export default function Home() {
 
           <motion.p
             {...fadeUp(0.2)}
-            style={{ color: '#6B7280', fontSize: '1.05rem', lineHeight: 1.7, maxWidth: '460px', marginBottom: '2.25rem' }}
+            style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.7, maxWidth: '460px', marginBottom: '2.25rem' }}
           >
             Headquartered in Kerala, Kairos Global Solutions delivers high-performance
             enterprise consulting, adaptive technology frameworks, and human capital infrastructure.

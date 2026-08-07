@@ -115,7 +115,7 @@ export default function Services() {
           transition={{ duration: 0.55, delay: 0.08 }}
           style={{
             fontSize: 'clamp(2.2rem, 5vw, 3.75rem)',
-            fontWeight: 900, color: '#0F0F0F',
+            fontWeight: 900, color: 'var(--text-primary)',
             letterSpacing: '-0.035em', lineHeight: 1.08,
             marginBottom: '1rem', maxWidth: '600px',
           }}
@@ -126,7 +126,7 @@ export default function Services() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.16 }}
-          style={{ color: '#6B7280', fontSize: '1.05rem', lineHeight: 1.65, maxWidth: '520px' }}
+          style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.65, maxWidth: '520px' }}
         >
           Targeted operational configurations designed to balance and scale enterprise workflows. Click any card to explore full scope.
         </motion.p>
@@ -188,7 +188,7 @@ export default function Services() {
                   style={{
                     fontSize: '1.25rem',
                     fontWeight: 800,
-                    color: '#0F0F0F',
+                    color: 'var(--text-primary)',
                     marginBottom: '0.75rem',
                     letterSpacing: '-0.02em',
                     lineHeight: 1.25,
@@ -198,7 +198,7 @@ export default function Services() {
                 </h3>
 
                 {/* Description */}
-                <p style={{ color: '#4B5563', fontSize: '0.9rem', lineHeight: 1.65, margin: 0 }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: 1.65, margin: 0 }}>
                   {svc.desc}
                 </p>
               </div>
