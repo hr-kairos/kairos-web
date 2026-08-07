@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Background from '../components/Background';
+import CookieBanner from '../components/CookieBanner';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
@@ -48,6 +49,7 @@ export default function App({ Component, pageProps, router }) {
             <Navbar />
             <Analytics />
             <SpeedInsights />
+            <CookieBanner />
             <AnimatePresence mode="wait">
               <motion.div
                 key={router.route}

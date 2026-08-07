@@ -11,6 +11,7 @@ const navLinks = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [theme, setTheme] = useState('light');
   const router = useRouter();
   const currentPath = router.pathname;
   const isActive = (path) => currentPath === path;
@@ -18,19 +19,37 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Theme sync
+    const savedTheme = localStorage.getItem('kairos_theme') || 'light';
+    setTheme(savedTheme);
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('kairos_theme', newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   return (
     <nav
       className="fixed w-full top-0 z-50 transition-all duration-300"
       style={{
         background: scrolled
-          ? 'rgba(249,247,244,0.92)'
-          : 'rgba(249,247,244,0.75)',
+          ? theme === 'dark' ? 'rgba(15,23,42,0.92)' : 'rgba(249,247,244,0.92)'
+          : theme === 'dark' ? 'rgba(15,23,42,0.75)' : 'rgba(249,247,244,0.75)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(0,0,0,0.07)',
+        borderBottom: theme === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.07)',
         boxShadow: scrolled ? '0 1px 20px rgba(0,0,0,0.05)' : 'none',
       }}
     >
@@ -50,18 +69,18 @@ export default function Navbar() {
             }}
             className="group-hover:scale-105"
           />
-          <span style={{ fontWeight: 800, fontSize: '1.25rem', letterSpacing: '-0.025em', color: '#0F0F0F', lineHeight: 1 }}>
+          <span style={{ fontWeight: 800, fontSize: '1.25rem', letterSpacing: '-0.025em', color: theme === 'dark' ? '#F8FAFC' : '#0F0F0F', lineHeight: 1 }}>
             Kairos Global{' '}
             <span style={{ color: '#0891b2', fontWeight: 500 }}>Solutions</span>
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-5">
           <div
             style={{
-              background: 'rgba(0, 0, 0, 0.04)',
-              border: '1px solid rgba(0, 0, 0, 0.065)',
+              background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.065)',
               borderRadius: '9999px',
               padding: '0.35rem 0.45rem',
               display: 'flex',
@@ -78,8 +97,8 @@ export default function Navbar() {
                   style={{
                     fontSize: '0.92rem',
                     fontWeight: active ? 700 : 500,
-                    color: active ? '#0891b2' : '#4B5563',
-                    background: active ? '#FFFFFF' : 'transparent',
+                    color: active ? '#0891b2' : theme === 'dark' ? '#94A3B8' : '#4B5563',
+                    background: active ? (theme === 'dark' ? '#1E293B' : '#FFFFFF') : 'transparent',
                     border: active ? '1px solid rgba(8, 145, 178, 0.2)' : '1px solid transparent',
                     boxShadow: active ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
                     borderRadius: '9999px',
@@ -90,13 +109,13 @@ export default function Navbar() {
                   }}
                   onMouseEnter={(e) => {
                     if (!active) {
-                      e.currentTarget.style.color = '#0F0F0F';
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.7)';
+                      e.currentTarget.style.color = theme === 'dark' ? '#F8FAFC' : '#0F0F0F';
+                      e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.7)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!active) {
-                      e.currentTarget.style.color = '#4B5563';
+                      e.currentTarget.style.color = theme === 'dark' ? '#94A3B8' : '#4B5563';
                       e.currentTarget.style.background = 'transparent';
                     }
                   }}
@@ -106,6 +125,27 @@ export default function Navbar() {
               );
             })}
           </div>
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+            style={{
+              background: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+              border: theme === 'dark' ? '1px solid rgba(255,255,255,0.15)' : '1px solid rgba(0,0,0,0.08)',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: theme === 'dark' ? '#FACC15' : '#0891b2',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} style={{ fontSize: '1rem' }} />
+          </button>
 
           <Link href="/contact" className="btn-primary" style={{ padding: '0.65rem 1.45rem', fontSize: '0.85rem' }}>
             Connect →

@@ -37,8 +37,16 @@ export default function Document() {
         <meta name="twitter:description" content="Enterprise consulting, technology frameworks, and executive human capital." />
         <meta name="twitter:image" content="https://kairosglobalsolutions.vercel.app/kairos_global_solutions_official_cover.jpg" />
 
-        {/* Fonts & Icons */}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        {/* Fonts & Icons Optimization */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
         <link rel="icon" type="image/png" href="/logo-transparentbg.png" />
 
         {/* Google Structured Data */}

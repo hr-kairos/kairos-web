@@ -1,4 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
 
+# Host
+Host: https://kairosglobalsolutions.vercel.app
+
+# Sitemaps
 Sitemap: https://kairosglobalsolutions.vercel.app/sitemap.xml

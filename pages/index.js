@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import MetaHead from '../components/MetaHead';
 
 /* ── Animated hero visual — floating logo with orbital rings ── */
 function HeroVisual() {
@@ -143,6 +144,10 @@ const fadeUp = (delay = 0) => ({
 export default function Home() {
   return (
     <div className="w-full max-w-7xl mx-auto px-6 flex-grow flex flex-col justify-center" style={{ paddingTop: '120px', paddingBottom: '120px', minHeight: 'calc(100vh - 120px)' }}>
+      <MetaHead
+        title="Kairos Global Solutions | Enterprise Consulting & Human Capital"
+        description="Headquartered in Kerala, Kairos Global Solutions delivers high-performance enterprise consulting, adaptive technology frameworks, and human capital infrastructure."
+      />
 
       {/* ── Hero ── */}
       <div className="grid md:grid-cols-2 gap-8 items-center" style={{ minHeight: '420px' }}>

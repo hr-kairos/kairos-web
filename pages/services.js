@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import MetaHead from '../components/MetaHead';
 
 const services = [
   {
@@ -91,6 +92,10 @@ export default function Services() {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-6" style={{ paddingTop: '110px', paddingBottom: '80px' }}>
+      <MetaHead
+        title="Service Capabilities | Kairos Global Solutions"
+        description="Recruitment logistics, enterprise L&D bootcamps, business restructuring, IT consulting, and legal governance frameworks."
+      />
 
       {/* Header */}
       <div style={{ marginBottom: '4rem' }}>
