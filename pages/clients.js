@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import MetaHead from '../components/MetaHead';
 
 const partners = [
   { name: 'TCS', logo: '/tcs.png', category: 'IT & Cloud' },
@@ -37,7 +38,9 @@ function LogoCard({ partner, activeCategory }) {
         width: '180px',
         height: '110px',
         flexShrink: 0,
-        background: '#F9F7F4', /* Same as body background to make blend-mode work */
+        background: 'var(--card-bg)',
+        border: '1px solid var(--border-color)',
+        borderRadius: '1.2rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -45,13 +48,13 @@ function LogoCard({ partner, activeCategory }) {
         padding: '0.75rem',
         gap: '0.75rem',
         transition: 'all 0.3s ease',
-        opacity: isSelected ? 1 : 0.25,
+        opacity: isSelected ? 1 : 0.35,
         filter: isSelected ? 'none' : 'grayscale(100%)',
-        transform: isSelected ? (isJConnect ? 'scale(1.22)' : 'scale(1)') : 'scale(0.92)',
+        transform: isSelected ? (isJConnect ? 'scale(1.12)' : 'scale(1)') : 'scale(0.92)',
       }}
       className="hover:scale-105"
     >
-      <div style={{ width: isJConnect ? '150px' : '120px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ width: isJConnect ? '140px' : '110px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FFFFFF', padding: '0.3rem', borderRadius: '0.6rem' }}>
         <img
           src={partner.logo}
           alt={partner.name}
@@ -59,13 +62,12 @@ function LogoCard({ partner, activeCategory }) {
             maxWidth: '100%',
             maxHeight: '100%',
             objectFit: 'contain',
-            mixBlendMode: 'multiply',
-            transform: isJConnect ? 'scale(1.35)' : 'none',
+            transform: isJConnect ? 'scale(1.2)' : 'none',
           }}
           onError={(e) => (e.target.style.opacity = '0')}
         />
       </div>
-      <span style={{ fontSize: '0.75rem', fontWeight: 600, color: isSelected ? '#0F0F0F' : '#9CA3AF', textAlign: 'center', lineHeight: 1.2 }}>
+      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: isSelected ? 'var(--text-primary)' : 'var(--text-muted)', textAlign: 'center', lineHeight: 1.2 }}>
         {partner.name}
       </span>
     </div>
@@ -77,6 +79,11 @@ export default function Clients() {
 
   return (
     <div className="w-full" style={{ paddingTop: '110px', paddingBottom: '80px' }}>
+      <MetaHead
+        title="Enterprise Alliances & Clients | Kairos Global Solutions"
+        description="Partnering with Fortune 500 enterprises, IT leaders, and global advisory firms including TCS, Infosys, Wipro, IBM, Capgemini, and EY."
+      />
+
       {/* Header */}
       <div className="max-w-7xl mx-auto px-6 text-center" style={{ marginBottom: '2.5rem' }}>
         <motion.div
@@ -95,28 +102,23 @@ export default function Clients() {
           transition={{ duration: 0.55, delay: 0.08 }}
           style={{
             fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-            fontWeight: 900, color: '#0F0F0F',
+            fontWeight: 900, color: 'var(--text-primary)',
             letterSpacing: '-0.035em', lineHeight: 1.08, marginBottom: '1rem',
           }}
         >
-          Global <span className="text-gradient">Alliances</span>
+          Enterprise <span className="text-gradient">Alliances</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.16 }}
-          style={{ color: '#6B7280', maxWidth: '440px', margin: '0 auto', fontSize: '1.05rem', lineHeight: 1.65, marginBottom: '2rem' }}
+          style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.65, maxWidth: '520px', margin: '0 auto 2rem' }}
         >
-          Integrated seamlessly with global industry leaders across sectors.
+          Partnering with global market leaders to architect resilient operations, cross-border workforce logistics, and digital transformations.
         </motion.p>
 
-        {/* Industry Pill Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.22 }}
-          style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}
-        >
+        {/* Filter Pills */}
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
           {categories.map((cat) => {
             const active = activeCategory === cat;
             return (
@@ -124,64 +126,41 @@ export default function Clients() {
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
                 style={{
-                  padding: '0.45rem 1.15rem',
+                  padding: '0.45rem 1.1rem',
                   borderRadius: '9999px',
-                  fontSize: '0.82rem',
-                  fontWeight: active ? 700 : 500,
-                  color: active ? '#0891b2' : '#4B5563',
-                  background: active ? '#FFFFFF' : 'rgba(0,0,0,0.03)',
-                  border: active ? '1px solid rgba(8,145,178,0.25)' : '1px solid rgba(0,0,0,0.06)',
-                  boxShadow: active ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
                   cursor: 'pointer',
+                  border: active ? '1px solid rgba(8, 145, 178, 0.3)' : '1px solid var(--border-color)',
+                  background: active ? '#0891b2' : 'var(--card-bg)',
+                  color: active ? '#FFFFFF' : 'var(--text-secondary)',
                   transition: 'all 0.2s ease',
+                  boxShadow: active ? '0 4px 14px rgba(8, 145, 178, 0.25)' : 'none',
                 }}
               >
                 {cat}
               </button>
             );
           })}
-        </motion.div>
+        </div>
       </div>
 
-      {/* ── Dual Marquee ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
-      >
-        {/* Row 1 — scrolls left */}
-        <div style={{ overflow: 'hidden' }}>
-          <div className="marquee-track marquee-track--left" style={{ paddingLeft: '1.25rem' }}>
-            {row1.map((p, i) => (
-              <LogoCard key={`r1-${i}`} partner={p} activeCategory={activeCategory} />
-            ))}
-          </div>
+      {/* Infinite Marquee Section */}
+      <div style={{ overflow: 'hidden', padding: '1.5rem 0', display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative' }}>
+        {/* Left marquee */}
+        <div className="marquee-track marquee-track--left">
+          {row1.map((partner, index) => (
+            <LogoCard key={`row1-${index}`} partner={partner} activeCategory={activeCategory} />
+          ))}
         </div>
 
-        {/* Row 2 — scrolls right */}
-        <div style={{ overflow: 'hidden' }}>
-          <div className="marquee-track marquee-track--right" style={{ paddingLeft: '1.25rem' }}>
-            {row2.map((p, i) => (
-              <LogoCard key={`r2-${i}`} partner={p} activeCategory={activeCategory} />
-            ))}
-          </div>
+        {/* Right marquee */}
+        <div className="marquee-track marquee-track--right">
+          {row2.map((partner, index) => (
+            <LogoCard key={`row2-${index}`} partner={partner} activeCategory={activeCategory} />
+          ))}
         </div>
-      </motion.div>
-
-      {/* Bottom note */}
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        style={{
-          textAlign: 'center', marginTop: '3rem',
-          fontSize: '0.78rem', color: '#D1D5DB',
-          fontWeight: 500, letterSpacing: '0.05em',
-        }}
-      >
-        Hover over the strip to pause
-      </motion.p>
+      </div>
     </div>
   );
 }
