@@ -40,7 +40,7 @@ function LogoCard({ partner, activeCategory }) {
         flexShrink: 0,
         background: 'var(--card-bg)',
         border: '1px solid var(--border-color)',
-        borderRadius: '1.2rem',
+        borderRadius: '0.85rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -48,13 +48,13 @@ function LogoCard({ partner, activeCategory }) {
         padding: '0.75rem',
         gap: '0.75rem',
         transition: 'all 0.3s ease',
-        opacity: isSelected ? 1 : 0.35,
+        opacity: isSelected ? 1 : 0.25,
         filter: isSelected ? 'none' : 'grayscale(100%)',
-        transform: isSelected ? (isJConnect ? 'scale(1.12)' : 'scale(1)') : 'scale(0.92)',
+        transform: isSelected ? (isJConnect ? 'scale(1.22)' : 'scale(1)') : 'scale(0.92)',
       }}
       className="hover:scale-105"
     >
-      <div style={{ width: isJConnect ? '140px' : '110px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FFFFFF', padding: '0.3rem', borderRadius: '0.6rem' }}>
+      <div style={{ width: isJConnect ? '150px' : '120px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <img
           src={partner.logo}
           alt={partner.name}
@@ -62,12 +62,12 @@ function LogoCard({ partner, activeCategory }) {
             maxWidth: '100%',
             maxHeight: '100%',
             objectFit: 'contain',
-            transform: isJConnect ? 'scale(1.2)' : 'none',
+            transform: isJConnect ? 'scale(1.35)' : 'none',
           }}
           onError={(e) => (e.target.style.opacity = '0')}
         />
       </div>
-      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: isSelected ? 'var(--text-primary)' : 'var(--text-muted)', textAlign: 'center', lineHeight: 1.2 }}>
+      <span style={{ fontSize: '0.75rem', fontWeight: 600, color: isSelected ? 'var(--text-primary)' : 'var(--text-muted)', textAlign: 'center', lineHeight: 1.2 }}>
         {partner.name}
       </span>
     </div>
