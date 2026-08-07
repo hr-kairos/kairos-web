@@ -42,6 +42,7 @@ export default function Contact() {
       currentLocation: e.target.currentLocation.value,
       preferredLocation: e.target.preferredLocation.value,
       resume: resume.data ? resume : null,
+      _honeypot: e.target._honeypot?.value || '',
     };
 
     trackEvent('contact_form_submission_started', { position: formData.position });
@@ -326,6 +327,15 @@ export default function Contact() {
         </h2>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {/* Honeypot anti-bot field — invisible to real users, bots auto-fill it */}
+          <input
+            type="text"
+            name="_honeypot"
+            autoComplete="off"
+            tabIndex={-1}
+            aria-hidden="true"
+            style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+          />
           <input
             type="text"
             name="name"
