@@ -78,24 +78,13 @@ function HeroVisual() {
       <motion.div
         animate={{ y: [-10, 10, -10] }}
         transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+        className="hero-floating-badge"
         style={{
           position: 'absolute',
           top: '30px',
           left: '25px',
           zIndex: 3,
-          background: 'rgba(249, 247, 244, 0.9)',
-          border: '1px solid rgba(8, 145, 178, 0.22)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderRadius: '9999px',
-          padding: '0.45rem 0.95rem',
-          fontSize: '0.78rem',
-          fontWeight: 600,
-          color: '#0F0F0F',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.45rem',
+          borderColor: 'rgba(8, 145, 178, 0.3)',
           willChange: 'transform',
         }}
       >
@@ -107,24 +96,13 @@ function HeroVisual() {
       <motion.div
         animate={{ y: [10, -10, 10] }}
         transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+        className="hero-floating-badge"
         style={{
           position: 'absolute',
           bottom: '35px',
           right: '30px',
           zIndex: 3,
-          background: 'rgba(249, 247, 244, 0.9)',
-          border: '1px solid rgba(16, 185, 129, 0.22)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderRadius: '9999px',
-          padding: '0.45rem 0.95rem',
-          fontSize: '0.78rem',
-          fontWeight: 600,
-          color: '#0F0F0F',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.45rem',
+          borderColor: 'rgba(16, 185, 129, 0.3)',
           willChange: 'transform',
         }}
       >

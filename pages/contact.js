@@ -673,10 +673,10 @@ export default function Contact() {
                     <i className="fas fa-cloud-upload-alt" style={{ color: '#0891b2', fontSize: '1.2rem' }} />
                   </div>
                   <div>
-                    <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700, color: '#1F2937' }}>
+                    <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       Drag & drop your resume here
                     </p>
-                    <p style={{ margin: '2px 0 0 0', fontSize: '0.75rem', color: '#6B7280' }}>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       or <span style={{ color: '#0891b2', textDecoration: 'underline' }}>browse file</span> from computer
                     </p>
                   </div>
@@ -687,7 +687,7 @@ export default function Contact() {
               <div
                 style={{
                   border: '1px solid rgba(16, 185, 129, 0.3)',
-                  background: 'rgba(16, 185, 129, 0.05)',
+                  background: 'rgba(16, 185, 129, 0.08)',
                   borderRadius: '0.85rem',
                   padding: '0.85rem 1.1rem',
                   display: 'flex',
@@ -701,7 +701,7 @@ export default function Contact() {
                     style={{ color: '#0891b2', fontSize: '1.3rem' }}
                   />
                   <div>
-                    <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 700, color: '#0F0F0F' }}>{resume.name}</p>
+                    <p style={{ margin: 0, fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>{resume.name}</p>
                     <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 600 }}>✓ Attached ({resume.size})</span>
                   </div>
                 </div>
@@ -710,7 +710,7 @@ export default function Contact() {
                   onClick={removeResume}
                   title="Remove file"
                   style={{
-                    background: 'rgba(239, 68, 68, 0.1)',
+                    background: 'rgba(239, 68, 68, 0.15)',
                     border: 'none',
                     borderRadius: '50%',
                     width: '30px',
@@ -731,8 +731,8 @@ export default function Contact() {
           {/* Simple Math CAPTCHA Security Verification */}
           <div
             style={{
-              background: '#F9FAFB',
-              border: captchaError ? '1px solid #ef4444' : '1px solid #E5E7EB',
+              background: 'var(--input-bg)',
+              border: captchaError ? '1px solid #ef4444' : '1px solid var(--border-color)',
               borderRadius: '0.85rem',
               padding: '0.85rem 1rem',
               marginTop: '0.2rem',
@@ -742,7 +742,7 @@ export default function Contact() {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <label htmlFor="captchaInput" style={{ fontSize: '0.78rem', fontWeight: 700, color: '#374151', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <label htmlFor="captchaInput" style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <i className="fas fa-shield-alt" style={{ color: '#0891b2' }} />
                 Security Verification: What is <span style={{ color: '#0891b2', fontWeight: 800 }}>{captcha.num1} + {captcha.num2}</span>?
               </label>
@@ -750,7 +750,7 @@ export default function Contact() {
                 type="button"
                 onClick={generateCaptcha}
                 title="New problem"
-                style={{ background: 'none', border: 'none', color: '#6B7280', cursor: 'pointer', fontSize: '0.75rem' }}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem' }}
               >
                 <i className="fas fa-sync-alt" />
               </button>

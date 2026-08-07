@@ -233,16 +233,10 @@ export default function Services() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 15 }}
               onClick={(e) => e.stopPropagation()}
+              className="modal-card"
               style={{
                 width: '100%',
                 maxWidth: '560px',
-                background: 'rgba(255, 255, 255, 0.94)',
-                border: '1px solid rgba(255, 255, 255, 0.8)',
-                backdropFilter: 'blur(30px)',
-                WebkitBackdropFilter: 'blur(30px)',
-                borderRadius: '1.75rem',
-                padding: '2.5rem',
-                boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.2)',
                 position: 'relative',
               }}
             >
@@ -253,13 +247,13 @@ export default function Services() {
                   position: 'absolute',
                   top: '1.5rem',
                   right: '1.5rem',
-                  background: 'rgba(0,0,0,0.05)',
-                  border: 'none',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--border-color)',
                   width: '32px', height: '32px',
                   borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   cursor: 'pointer',
-                  color: '#6B7280',
+                  color: 'var(--text-muted)',
                 }}
               >
                 <i className="fas fa-times" style={{ fontSize: '0.9rem' }} />
@@ -282,24 +276,24 @@ export default function Services() {
                   <span style={{ fontSize: '0.75rem', fontWeight: 700, color: selectedSvc.color, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                     Capability Scope {selectedSvc.num}
                   </span>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0F0F0F', margin: 0, lineHeight: 1.2 }}>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, lineHeight: 1.2 }}>
                     {selectedSvc.title}
                   </h3>
                 </div>
               </div>
 
-              <p style={{ color: '#4B5563', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
                 {selectedSvc.desc}
               </p>
 
               {/* Deliverable Sub-Points */}
               <div style={{ marginBottom: '2rem' }}>
-                <h4 style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9CA3AF', marginBottom: '0.85rem' }}>
+                <h4 style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.85rem' }}>
                   Key Deliverables & Execution Scope
                 </h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                   {selectedSvc.details.map((point, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#1F2937', fontWeight: 500 }}>
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: 'var(--text-primary)', fontWeight: 500 }}>
                       <i className="fas fa-check-circle" style={{ color: selectedSvc.color, fontSize: '0.85rem' }} />
                       <span>{point}</span>
                     </div>

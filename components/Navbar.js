@@ -76,7 +76,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-5">
+        <div className="hidden md:flex items-center gap-4">
           <div
             style={{
               background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
@@ -126,30 +126,33 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* Theme Toggle Button */}
+          <Link href="/contact" className="btn-primary" style={{ padding: '0.65rem 1.45rem', fontSize: '0.85rem' }}>
+            Connect →
+          </Link>
+
+          {/* Theme Toggle Button — Positioned at rightmost edge for executive balance */}
           <button
             onClick={toggleTheme}
             title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
             style={{
-              background: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
-              border: theme === 'dark' ? '1px solid rgba(255,255,255,0.15)' : '1px solid rgba(0,0,0,0.08)',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
+              background: theme === 'dark' ? 'rgba(30,41,59,0.8)' : 'rgba(255,255,255,0.9)',
+              border: theme === 'dark' ? '1px solid rgba(255,255,255,0.15)' : '1px solid rgba(0,0,0,0.1)',
+              borderRadius: '9999px',
+              padding: '0.5rem 0.9rem',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              gap: '0.4rem',
+              fontSize: '0.78rem',
+              fontWeight: 700,
               color: theme === 'dark' ? '#FACC15' : '#0891b2',
               cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
               transition: 'all 0.2s ease',
             }}
           >
-            <i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} style={{ fontSize: '1rem' }} />
+            <i className={`fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} style={{ fontSize: '0.85rem' }} />
+            <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
           </button>
-
-          <Link href="/contact" className="btn-primary" style={{ padding: '0.65rem 1.45rem', fontSize: '0.85rem' }}>
-            Connect →
-          </Link>
         </div>
 
         {/* Mobile toggle */}
