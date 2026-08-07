@@ -19,38 +19,32 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Theme sync
-    const savedTheme = localStorage.getItem('kairos_theme') || 'light';
-    setTheme(savedTheme);
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('kairos_theme', newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
+    const syncTheme = () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setTheme(isDark ? 'dark' : 'light');
+    };
+
+    syncTheme();
+    window.addEventListener('kairos_theme_change', syncTheme);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('kairos_theme_change', syncTheme);
+    };
+  }, []);
 
   return (
     <nav
       className="fixed w-full top-0 z-50 transition-all duration-300"
       style={{
         background: scrolled
-          ? theme === 'dark' ? 'rgba(15,23,42,0.92)' : 'rgba(249,247,244,0.92)'
-          : theme === 'dark' ? 'rgba(15,23,42,0.75)' : 'rgba(249,247,244,0.75)',
+          ? theme === 'dark' ? 'rgba(11, 15, 23, 0.94)' : 'rgba(249, 247, 244, 0.94)'
+          : theme === 'dark' ? 'rgba(11, 15, 23, 0.8)' : 'rgba(249, 247, 244, 0.8)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: theme === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.07)',
-        boxShadow: scrolled ? '0 1px 20px rgba(0,0,0,0.05)' : 'none',
+        borderBottom: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.07)',
+        boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.06)' : 'none',
       }}
     >
       <div
@@ -69,7 +63,7 @@ export default function Navbar() {
             }}
             className="group-hover:scale-105"
           />
-          <span style={{ fontWeight: 800, fontSize: '1.25rem', letterSpacing: '-0.025em', color: theme === 'dark' ? '#F8FAFC' : '#0F0F0F', lineHeight: 1 }}>
+          <span style={{ fontWeight: 800, fontSize: '1.25rem', letterSpacing: '-0.025em', color: 'var(--text-primary)', lineHeight: 1 }}>
             Kairos Global{' '}
             <span style={{ color: '#0891b2', fontWeight: 500 }}>Solutions</span>
           </span>
@@ -80,7 +74,7 @@ export default function Navbar() {
           <div
             style={{
               background: theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
-              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.065)',
+              border: theme === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.065)',
               borderRadius: '9999px',
               padding: '0.35rem 0.45rem',
               display: 'flex',
@@ -97,9 +91,9 @@ export default function Navbar() {
                   style={{
                     fontSize: '0.92rem',
                     fontWeight: active ? 700 : 500,
-                    color: active ? '#0891b2' : theme === 'dark' ? '#94A3B8' : '#4B5563',
+                    color: active ? '#0891b2' : theme === 'dark' ? '#CBD5E1' : '#4B5563',
                     background: active ? (theme === 'dark' ? '#1E293B' : '#FFFFFF') : 'transparent',
-                    border: active ? '1px solid rgba(8, 145, 178, 0.2)' : '1px solid transparent',
+                    border: active ? '1px solid rgba(8, 145, 178, 0.25)' : '1px solid transparent',
                     boxShadow: active ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
                     borderRadius: '9999px',
                     padding: '0.55rem 1.35rem',
@@ -109,13 +103,13 @@ export default function Navbar() {
                   }}
                   onMouseEnter={(e) => {
                     if (!active) {
-                      e.currentTarget.style.color = theme === 'dark' ? '#F8FAFC' : '#0F0F0F';
+                      e.currentTarget.style.color = theme === 'dark' ? '#FFFFFF' : '#0F0F0F';
                       e.currentTarget.style.background = theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.7)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!active) {
-                      e.currentTarget.style.color = theme === 'dark' ? '#94A3B8' : '#4B5563';
+                      e.currentTarget.style.color = theme === 'dark' ? '#CBD5E1' : '#4B5563';
                       e.currentTarget.style.background = 'transparent';
                     }
                   }}
@@ -131,23 +125,23 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile toggle */}
+        {/* Mobile toggle button */}
         <button
           className="md:hidden"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#0F0F0F', padding: '4px' }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', padding: '4px' }}
         >
           <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'} text-xl`} />
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu dropdown */}
       {isOpen && (
         <div
           style={{
-            background: 'rgba(249,247,244,0.98)',
-            borderTop: '1px solid rgba(0,0,0,0.06)',
+            background: theme === 'dark' ? 'rgba(15, 23, 42, 0.98)' : 'rgba(249, 247, 244, 0.98)',
+            borderTop: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.06)',
             backdropFilter: 'blur(20px)',
           }}
         >
@@ -157,12 +151,22 @@ export default function Navbar() {
                 key={href}
                 href={href}
                 onClick={() => setIsOpen(false)}
-                style={{ fontWeight: 600, fontSize: '0.95rem', color: isActive(href) ? '#0891b2' : '#374151', textDecoration: 'none' }}
+                style={{
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  color: isActive(href) ? '#0891b2' : 'var(--text-primary)',
+                  textDecoration: 'none',
+                }}
               >
                 {label}
               </Link>
             ))}
-            <Link href="/contact" onClick={() => setIsOpen(false)} className="btn-primary" style={{ justifyContent: 'center' }}>
+            <Link
+              href="/contact"
+              onClick={() => setIsOpen(false)}
+              className="btn-primary text-center"
+              style={{ width: '100%', marginTop: '0.5rem' }}
+            >
               Connect →
             </Link>
           </div>

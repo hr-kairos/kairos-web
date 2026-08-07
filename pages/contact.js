@@ -13,24 +13,6 @@ export default function Contact() {
   const [touched, setTouched] = useState({});
   const [errors, setErrors] = useState({});
 
-  // Lightweight Math CAPTCHA State
-  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0, answer: '' });
-  const [captchaInput, setCaptchaInput] = useState('');
-  const [captchaError, setCaptchaError] = useState(false);
-
-  // Generate new math problem on mount
-  useEffect(() => {
-    generateCaptcha();
-  }, []);
-
-  const generateCaptcha = () => {
-    const n1 = Math.floor(Math.random() * 8) + 2; // 2-9
-    const n2 = Math.floor(Math.random() * 8) + 1; // 1-8
-    setCaptcha({ num1: n1, num2: n2, answer: (n1 + n2).toString() });
-    setCaptchaInput('');
-    setCaptchaError(false);
-  };
-
   // Process File
   const processFile = (file) => {
     if (!file) return;
@@ -134,13 +116,6 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Verify Math CAPTCHA
-    if (captchaInput.trim() !== captcha.answer) {
-      setCaptchaError(true);
-      return;
-    }
-    setCaptchaError(false);
-
     setStatus('sending');
 
     const formData = {
@@ -172,7 +147,6 @@ export default function Contact() {
         setResume({ data: '', name: '', type: '', size: '' });
         setTouched({});
         setErrors({});
-        generateCaptcha();
         setTimeout(() => setShowToast(false), 5000);
       } else {
         setStatus('error');
@@ -725,58 +699,6 @@ export default function Contact() {
                   <i className="fas fa-trash-alt" style={{ fontSize: '0.75rem' }} />
                 </button>
               </div>
-            )}
-          </div>
-
-          {/* Simple Math CAPTCHA Security Verification */}
-          <div
-            style={{
-              background: 'var(--input-bg)',
-              border: captchaError ? '1px solid #ef4444' : '1px solid var(--border-color)',
-              borderRadius: '0.85rem',
-              padding: '0.85rem 1rem',
-              marginTop: '0.2rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <label htmlFor="captchaInput" style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <i className="fas fa-shield-alt" style={{ color: '#0891b2' }} />
-                Security Verification: What is <span style={{ color: '#0891b2', fontWeight: 800 }}>{captcha.num1} + {captcha.num2}</span>?
-              </label>
-              <button
-                type="button"
-                onClick={generateCaptcha}
-                title="New problem"
-                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem' }}
-              >
-                <i className="fas fa-sync-alt" />
-              </button>
-            </div>
-            <input
-              id="captchaInput"
-              type="text"
-              name="captcha"
-              value={captchaInput}
-              onChange={(e) => {
-                setCaptchaInput(e.target.value);
-                setCaptchaError(false);
-              }}
-              placeholder="Enter answer"
-              required
-              className="glass-input"
-              style={{
-                padding: '0.55rem 0.85rem',
-                fontSize: '0.85rem',
-                borderColor: captchaError ? '#ef4444' : undefined,
-              }}
-            />
-            {captchaError && (
-              <span style={{ fontSize: '0.72rem', color: '#ef4444', fontWeight: 600 }}>
-                Incorrect math answer. Please try again.
-              </span>
             )}
           </div>
 
